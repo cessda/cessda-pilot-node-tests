@@ -1,7 +1,7 @@
-# CESSDA.CDC.SEARCHKIT v2.3.0
+# CESSDA-PIlot-Node-Tests
 
 ## Contributors
 
-Name            | Email                     | Role
-:---            | :---                      | :---
-Given Family | given DOT family AT cessda DOT eu | insert job title
+| Name             | Email                                 | Role               |
+| :---             | :---                                  | :---               |
+| John Shepherdson | john DOT shepherdson AT cessda DOT eu | Project Consultant |

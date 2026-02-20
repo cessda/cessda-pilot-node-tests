@@ -2,17 +2,23 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below." 
-title: "CESSDA xxx.xxx"
+title: cessda-pilot-node-tests
+message: 'If you use this software, please cite it as below.'
 type: software
-doi: 10.5281/zenodo.000000
-url: "https://github.com/cessda/cessda.xxx.xxx"
 authors:
-  - given-names: "Given"
-    family-names: "Family"
-    affiliation: "CESSDA ERIC"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
-  - given-names: "Given"
-    family-names: "Family"
-    affiliation: "CESSDA ERIC"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - given-names: John
+    family-names: Shepherdson
+    affiliation: CESSDA ERIC
+    orcid: 'https://orcid.org/0000-0002-4402-9644'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.000000
+    description: Placeholder DOI
+repository-code: 'https://github.com/cessda/cessda-pilot-node-tests.git'
+abstract: >-
+  This repository contains the source code for testing some of the functionality of the CESSDA Pilot Node
+keywords:
+  - EOSC Beyond
+  - Pilot Node
+  - Test
+license: Apache-2.0
