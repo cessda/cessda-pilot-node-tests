@@ -16,7 +16,7 @@ identifiers:
     description: Placeholder DOI
 repository-code: 'https://github.com/cessda/cessda-pilot-node-tests.git'
 abstract: >-
-  This repository contains the source code for testing some of the functionality of the CESSDA Pilot Node
+  This repository contains the source code for testing some of the functionality of an EOSC Pilot Node
 keywords:
   - EOSC Beyond
   - Pilot Node
