@@ -1,0 +1,64 @@
+{
+  "generated": "2026-03-02T17:33:36+00:00",
+  "node_name": "node-cessda",
+  "api_source": "https://providers.sandbox.eosc-beyond.eu/api/service/all?keyword=node-cessda&from=0&quantity=7&order=asc",
+  "total_services": 50,
+  "services": [
+  {
+    "name": "CESSDA Data Catalogue",
+    "abbreviation": "CDC",
+    "service_id": "21.15132/2shDkg",
+    "webpage": "https://www.cessda.eu/Tools/Data-Catalogue",
+    "status": "Available",
+    "http_code": "200"
+  },
+  {
+    "name": "CESSDA Vocabulary Service",
+    "abbreviation": "CVS",
+    "service_id": "21.15132/Mi69QS",
+    "webpage": "https://www.cessda.eu/Tools/Vocabulary-Service",
+    "status": "Available",
+    "http_code": "200"
+  },
+  {
+    "name": "CESSDA European Language Social Science Thesaurus",
+    "abbreviation": "ELSST",
+    "service_id": "21.15132/mNhmwY",
+    "webpage": "https://www.cessda.eu/Tools/ELSST-Thesaurus",
+    "status": "Available",
+    "http_code": "200"
+  },
+  {
+    "name": "CESSDA Data Management Expert Guide",
+    "abbreviation": "DMEG",
+    "service_id": "21.15132/ZhsDon",
+    "webpage": "https://dmeg.cessda.eu/",
+    "status": "Available",
+    "http_code": "200"
+  },
+  {
+    "name": "Cessda example instrument 2",
+    "abbreviation": "Cessda example instrument 2",
+    "service_id": "21.15132/xYRznR",
+    "webpage": "https://auth.aria.services/auth/realms/ARIA/protocol/openid-connect/auth?scope=openid%20account%20roles&response_type=code&approval_prompt=auto&redirect_uri=https%3A%2F%2Fbeta.structuralbiology.eu%2Fapi%2Fkeycloak%2Fv1%2Fauthorise%2F&client_id=beta-core",
+    "status": "Available",
+    "http_code": "200"
+  },
+  {
+    "name": "Cessda example instrument 1",
+    "abbreviation": "Cessda example instrument 1",
+    "service_id": "21.15132/KEjpKc",
+    "webpage": "https://auth.aria.services/auth/realms/ARIA/protocol/openid-connect/auth?scope=openid%20account%20roles&response_type=code&approval_prompt=auto&redirect_uri=https%3A%2F%2Fbeta.structuralbiology.eu%2Fapi%2Fkeycloak%2Fv1%2Fauthorise%2F&client_id=beta-core",
+    "status": "Available",
+    "http_code": "200"
+  },
+  {
+    "name": "CESSDA Data Archiving Guide",
+    "abbreviation": "DAG",
+    "service_id": "21.15132/mMA5mJ",
+    "webpage": "https://www.cessda.eu/Training/DAG",
+    "status": "Available",
+    "http_code": "200"
+  }
+]
+}

@@ -1,12 +1,18 @@
-# CESSDA Pilot Node tests
+# Pilot Node tests
 
 This repository contains the source code for testing some of the functionality
-of the CESSDA Pilot Node, which was developed as part of the EDOSC Beyonf Project
+of an EOSC Beyond Pilot Node.
+
+See [METRICS](METRICS.md) for details of which script to use for which Metric.
+
+The [resources](./src/main/resources/) directory contains examples of outputs
+from each of the scripts, in both plain text and Json formats.
 
 ## Configuration
 
-See [Exchange Services checker](CATALOGUE_README.md)
-and [Endpoint Capabilities checker](ENDPOINT_README.md)
+See [Node Capabilities checker](NODE_CAPABILITIES_README.md)
+and [Service Uptime checker](SERVIVCE_UPTIME_README.md)
+and [Exchange Services checker](SERVICE_CATALOGUE_README.md)
 for details of what they do and how to run them.
 
 ## Contributing
@@ -30,3 +36,8 @@ See the [LICENSE](LICENSE.txt) file.
 ## CITING
 
 See the [CITATION](CITATION.cff) file.
+
+## Support
+
+If you have any issues or suggestions concerning the scripts, please create a
+ticket in the [EOSC Beyond Helpdesk](https://helpdesk.sandbox.eosc-beyond.eu/#login).

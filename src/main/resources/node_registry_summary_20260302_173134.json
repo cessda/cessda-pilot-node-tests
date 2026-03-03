@@ -1,0 +1,27 @@
+{
+  "generated": "2026-03-02T17:31:40+00:00",
+  "registry_source": "https://node-devel.eosc.grnet.gr/federation-backend/tenants/eosc-beyond/nodes",
+  "nodes": [{
+  "name": "EOSC-Beyond",
+  "endpoint": "https://providers.sandbox.eosc-beyond.eu/node/endpoint",
+  "total_capabilities": 9,
+  "available_capabilities": 2,
+  "report_file": "endpoint_report_EOSC-Beyond_20260302_173134.json"
+}
+,
+{
+  "name": "NI4OS-EUROPE",
+  "endpoint": "https://endpoint.mrezhi.net/api/endpoint",
+  "total_capabilities": 0,
+  "available_capabilities": 0,
+  "report_file": "endpoint_report_NI4OS-EUROPE_20260302_173134.json"
+}
+,
+{
+  "name": "CESSDA",
+  "endpoint": "https://node-endpoint-staging.beyond.cessda.eu/api/endpoint",
+  "total_capabilities": 12,
+  "available_capabilities": 12,
+  "report_file": "endpoint_report_CESSDA_20260302_173134.json"
+}]
+}

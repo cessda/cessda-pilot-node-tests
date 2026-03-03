@@ -1,0 +1,38 @@
+==========================================
+ARGO Monitoring - Uptime Report
+==========================================
+Generated: Mon  2 Mar 2026 17:34:03 GMT
+API Source: https://api.devel.mon.argo.grnet.gr/api/v2/results/CORE/SERVICEGROUPS?start_time=2026-01-31T00:00:00Z&end_time=2026-03-02T23:59:59Z
+Period: 2026-01-31T00:00:00Z to 2026-03-02T23:59:59Z
+==========================================
+
+Project: CESSDA
+
+==========================================
+Endpoint Uptime Statistics
+==========================================
+
+Endpoint: Data Catalogue
+  Type: SERVICEGROUPS
+  Uptime: 100.00%
+  Availability: 100.00%
+  Reliability: 100.00%
+  Days Monitored: 31
+
+Endpoint: Metadata Validator
+  Type: SERVICEGROUPS
+  Uptime: 100.00%
+  Availability: 100.00%
+  Reliability: 100.00%
+  Days Monitored: 31
+
+Endpoint: Vocabulary Service
+  Type: SERVICEGROUPS
+  Uptime: 100.00%
+  Availability: 100.00%
+  Reliability: 100.00%
+  Days Monitored: 31
+
+==========================================
+End of Report
+==========================================

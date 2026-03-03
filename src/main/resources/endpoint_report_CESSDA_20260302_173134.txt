@@ -1,0 +1,60 @@
+==========================================
+Node: CESSDA
+==========================================
+Generated: Mon  2 Mar 2026 17:31:37 GMT
+Node ID: 6
+Node PID: 21.T15999/CESSDA
+Node Endpoint: https://node-endpoint-staging.beyond.cessda.eu/api/endpoint
+Legal Entity: Consortium of European Social Science Data Archives
+Legal Entity ROR: https://ror.org/02wg9xc72
+Logo: https://idp.cessda.eu/static/images/CESSDA_logo.svg
+==========================================
+
+Front Office                             Available (HTTP 200)
+  └─ Endpoint: https://marketplace-staging.cessda.eu/
+  └─ Version: 4.1.0
+
+AAI                                      Available (HTTP 302)
+  └─ Endpoint: https://idp.cessda.eu/
+  └─ Version: 1.0.0
+
+Monitoring                               Available (HTTP 200)
+  └─ Endpoint: https://cessda.ui.devel.mon.argo.grnet.gr/cessda/CORE
+  └─ Version: 1.0.0
+
+Service Catalogue                        Available (HTTP 200)
+  └─ Endpoint: https://service-catalogue-staging.beyond.cessda.eu/
+  └─ Version: 5.2.0
+
+Helpdesk                                 Available (HTTP 200)
+  └─ Endpoint: https://helpdesk.cessda.eu/
+  └─ Version: 1.0.0
+
+Service Catalogue                        Available (HTTP 200)
+  └─ Endpoint: https://service-catalogue-staging.beyond.cessda.eu/
+  └─ Version: 1.0.0
+
+CESSDA Data Catalogue                    Available (HTTP 200)
+  └─ Endpoint: https://datacatalogue.cessda.eu/
+  └─ Version: 4.0.0
+
+European Language Social Science Thesaurus Available (HTTP 200)
+  └─ Endpoint: https://thesauri.cessda.eu/elsst-6/en/
+  └─ Version: 6.0.0
+
+CESSDA Vocabulary Service                Available (HTTP 200)
+  └─ Endpoint: https://www.cessda.eu/Tools/Vocabulary-Service/
+  └─ Version: 4.0.0
+
+CESSDA Metadata Validator                Available (HTTP 200)
+  └─ Endpoint: https://cmv.cessda.eu/
+  └─ Version: 4.0.0
+
+CESSDA Data Management Expert Guide      Available (HTTP 200)
+  └─ Endpoint: https://www.cessda.eu/Training/DMEG
+  └─ Version: 3.0.0
+
+CESSDA Data Achiving Guide               Available (HTTP 200)
+  └─ Endpoint: https://www.cessda.eu/Training/DAG
+  └─ Version: 4.0.0
+

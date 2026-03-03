@@ -1,22 +1,34 @@
 #!/bin/bash
 
-# CESDA Resource Catalogue services Checker
-# Reads JSON from API and checks availability of each service webpage
+# Service Catalogue Resource Checker
+# Reads JSON from API and checks availability of each resource webpage
 #
-# Usage: ./check_catalogue_services.sh [format] [bearer_token]
+# Usage: ./check_catalogue_services.sh NODE_NAME [format]
+#   NODE_NAME: Node name to use as keyword filter (required)
 #   format: text, json, or both (default: both)
-#   bearer_token: Optional Bearer token for API authentication
-#   Example: ./check_catalogue_services.sh json "your-token-here"
-#   Example: ./check_catalogue_services.sh both "your-token-here"
+#   Example: ./check_catalogue_services.sh my-node json
+#   Example: ./check_catalogue_services.sh my-node both
 
-API_URL="https://providers.sandbox.eosc-beyond.eu/api/service/all?suspended=false&keyword=CESSDA&from=0&quantity=20&order=asc"
+# Use either the Sandbox Resource Catalogue API or your Node's
+# Resource Catalogue API, depending on the Metric being evaluated
+#API_BASE_URL="https://providers.sandbox.eosc-beyond.eu/api/service/all"
+API_BASE_URL="https://service-catalogue-staging.beyond.cessda.eu/api/service/all"
+
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 REPORT_FILE_TXT="catalogue_services_report_${TIMESTAMP}.txt"
 REPORT_FILE_JSON="catalogue_services_report_${TIMESTAMP}.json"
 
-# Parse command line arguments
-FORMAT="${1:-both}"
-BEARER_TOKEN="${2:-YOUR_BEARER_TOKEN_HERE}"
+# Check if NODE_NAME argument is provided
+if [ -z "$1" ]; then
+    echo "Error: NODE_NAME is required"
+    echo "Usage: $0 NODE_NAME [text|json|both]"
+    exit 1
+fi
+
+NODE_NAME="$1"
+
+# Parse format argument (second argument)
+FORMAT="${2:-both}"
 
 case "$FORMAT" in
     text|txt)
@@ -33,34 +45,35 @@ case "$FORMAT" in
         ;;
     *)
         echo "Invalid format: $FORMAT"
-        echo "Usage: $0 [text|json|both] [bearer_token]"
+        echo "Usage: $0 NODE_NAME [text|json|both]"
         exit 1
         ;;
 esac
 
-# Colors for terminal output
+# Opional QUANTITY argument
+QUANTITY="${3:-10}"
+
+# Construct API URL with NODE_NAME
+API_URL="${API_BASE_URL}?keyword=${NODE_NAME}&from=0&quantity=${QUANTITY}&order=asc"
+
+# Colours for terminal output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+BLUE='\033[0;34m'
+NC='\033[0m' # No Colour
 
 echo "======================================"
-echo "EOSC BEYOND Service Availability Report"
+echo "Service Catalogue Resource Availability Report"
 echo "======================================"
 echo "Generated: $(date)"
+echo "Node Name: $NODE_NAME"
 echo "API Source: $API_URL"
 echo "======================================"
 echo ""
 
-# Fetch JSON from API with Bearer token
-echo "Fetching service data..."
-if [ "$BEARER_TOKEN" = "YOUR_BEARER_TOKEN_HERE" ]; then
-    echo -e "${YELLOW}WARNING: Using placeholder Bearer token. Replace with actual token.${NC}"
-    echo ""
-fi
-
-echo "Executing curl command with verbose output..."
-echo "URL: $API_URL"
+# Fetch service data from API
+echo -e "${BLUE}Fetching service data from API...${NC}"
 echo ""
 
 # Create temporary files for curl output
@@ -69,9 +82,8 @@ CURL_RESPONSE="/tmp/curl_response_$$.json"
 
 # Execute curl with verbose output
 curl -v \
-  --header 'Content-Type: application/json' \
-  --header "Authorization: Bearer $BEARER_TOKEN" \
-  --header 'Accept: application/json' \
+  -X 'GET' \
+  -H 'accept: application/json' \
   "$API_URL" \
   -o "$CURL_RESPONSE" \
   2> "$CURL_OUTPUT"
@@ -79,9 +91,9 @@ curl -v \
 CURL_EXIT_CODE=$?
 
 echo ""
-echo "=== CURL VERBOSE OUTPUT ==="
+echo "=== API CALL VERBOSE OUTPUT ==="
 cat "$CURL_OUTPUT"
-echo "==========================="
+echo "==============================="
 echo ""
 
 # Read the JSON response
@@ -100,7 +112,6 @@ fi
 if [ -z "$JSON_DATA" ]; then
     echo -e "${RED}ERROR: No data received from API${NC}"
     echo "Please check:"
-    echo "  - Bearer token validity"
     echo "  - API endpoint accessibility"
     echo "  - HTTP status code in verbose output above"
     exit 1
@@ -113,7 +124,6 @@ if ! echo "$JSON_DATA" | grep -q '^{'; then
     echo "$JSON_DATA"
     echo ""
     echo "This might indicate:"
-    echo "  - Invalid or expired Bearer token"
     echo "  - API endpoint returned HTML error page"
     echo "  - Incorrect API URL"
     exit 1
@@ -135,20 +145,21 @@ echo ""
 echo "============================================"
 echo ""
 
-# Initialise text report if needed
+# Initialize text report if needed
 if [ "$GENERATE_TEXT" = true ]; then
     {
         echo "======================================"
-        echo "EOSC BEYOND Service Availability Report"
+        echo "Service Catalogue Resource Availability Report"
         echo "======================================"
         echo "Generated: $(date)"
+        echo "Node Name: $NODE_NAME"
         echo "API Source: $API_URL"
         echo "======================================"
         echo ""
     } > "$REPORT_FILE_TXT"
 fi
 
-# Initialise JSON report if needed
+# Initialize JSON report if needed
 if [ "$GENERATE_JSON" = true ]; then
     JSON_RESULTS="[]"
 fi
@@ -219,7 +230,7 @@ if command -v jq &> /dev/null; then
         
         # Add to JSON report (append to temporary file since we're in a subshell)
         if [ "$GENERATE_JSON" = true ]; then
-            TEMP_JSON="/tmp/cat_check_$$.json"
+            TEMP_JSON="/tmp/resource_check_$$.json"
             if [ ! -f "$TEMP_JSON" ]; then
                 echo "[]" > "$TEMP_JSON"
             fi
@@ -264,14 +275,15 @@ EOF
         COUNTER=$((COUNTER + 1))
     done
     
-    # Finalise JSON report
+    # Finalize JSON report
     if [ "$GENERATE_JSON" = true ]; then
-        TEMP_JSON="/tmp/cat_check_$$.json"
+        TEMP_JSON="/tmp/resource_check_$$.json"
         if [ -f "$TEMP_JSON" ]; then
             # Create final JSON structure
             cat > "$REPORT_FILE_JSON" <<EOF
 {
   "generated": "$(date -Iseconds)",
+  "node_name": "$NODE_NAME",
   "api_source": "$API_URL",
   "total_services": $TOTAL,
   "services": $(cat "$TEMP_JSON")
@@ -288,9 +300,9 @@ else
     # Extract results array content
     RESULTS=$(echo "$JSON_DATA" | sed -n '/"results"/,/]/p')
     
-    # Initialise temp file for JSON
+    # Initialize temp file for JSON
     if [ "$GENERATE_JSON" = true ]; then
-        TEMP_JSON="/tmp/cat_check_$$.json"
+        TEMP_JSON="/tmp/resource_check_$$.json"
         echo "[]" > "$TEMP_JSON"
     fi
     
@@ -382,13 +394,14 @@ else
         fi
     done
     
-    # Finalise JSON report
+    # Finalize JSON report
     if [ "$GENERATE_JSON" = true ]; then
-        TEMP_JSON="/tmp/cat_check_$$.json"
+        TEMP_JSON="/tmp/resource_check_$$.json"
         if [ -f "$TEMP_JSON" ]; then
             cat > "$REPORT_FILE_JSON" <<EOF
 {
   "generated": "$(date -Iseconds)",
+  "node_name": "$NODE_NAME",
   "api_source": "$API_URL",
   "total_services": $TOTAL,
   "services": $(cat "$TEMP_JSON")

@@ -1,0 +1,52 @@
+======================================
+Service Catalogue Resource Availability Report
+======================================
+Generated: Mon  2 Mar 2026 17:33:34 GMT
+Node Name: node-cessda
+API Source: https://providers.sandbox.eosc-beyond.eu/api/service/all?keyword=node-cessda&from=0&quantity=7&order=asc
+======================================
+
+Total services found: 50
+
+CESSDA Data Catalogue                              Available
+  └─ Abbreviation: CDC
+  └─ Service ID: 21.15132/2shDkg
+  └─ Webpage: https://www.cessda.eu/Tools/Data-Catalogue
+  └─ HTTP Code: 200
+
+CESSDA Vocabulary Service                          Available
+  └─ Abbreviation: CVS
+  └─ Service ID: 21.15132/Mi69QS
+  └─ Webpage: https://www.cessda.eu/Tools/Vocabulary-Service
+  └─ HTTP Code: 200
+
+CESSDA European Language Social Science Thesaurus  Available
+  └─ Abbreviation: ELSST
+  └─ Service ID: 21.15132/mNhmwY
+  └─ Webpage: https://www.cessda.eu/Tools/ELSST-Thesaurus
+  └─ HTTP Code: 200
+
+CESSDA Data Management Expert Guide                Available
+  └─ Abbreviation: DMEG
+  └─ Service ID: 21.15132/ZhsDon
+  └─ Webpage: https://dmeg.cessda.eu/
+  └─ HTTP Code: 200
+
+Cessda example instrument 2                        Available
+  └─ Abbreviation: Cessda example instrument 2
+  └─ Service ID: 21.15132/xYRznR
+  └─ Webpage: https://auth.aria.services/auth/realms/ARIA/protocol/openid-connect/auth?scope=openid%20account%20roles&response_type=code&approval_prompt=auto&redirect_uri=https%3A%2F%2Fbeta.structuralbiology.eu%2Fapi%2Fkeycloak%2Fv1%2Fauthorise%2F&client_id=beta-core
+  └─ HTTP Code: 200
+
+Cessda example instrument 1                        Available
+  └─ Abbreviation: Cessda example instrument 1
+  └─ Service ID: 21.15132/KEjpKc
+  └─ Webpage: https://auth.aria.services/auth/realms/ARIA/protocol/openid-connect/auth?scope=openid%20account%20roles&response_type=code&approval_prompt=auto&redirect_uri=https%3A%2F%2Fbeta.structuralbiology.eu%2Fapi%2Fkeycloak%2Fv1%2Fauthorise%2F&client_id=beta-core
+  └─ HTTP Code: 200
+
+CESSDA Data Archiving Guide                        Available
+  └─ Abbreviation: DAG
+  └─ Service ID: 21.15132/mMA5mJ
+  └─ Webpage: https://www.cessda.eu/Training/DAG
+  └─ HTTP Code: 200
+
