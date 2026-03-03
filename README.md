@@ -42,4 +42,4 @@ See the [CITATION](CITATION.cff) file.
 ## Support
 
 If you have any issues or suggestions concerning the scripts, please create a
-ticket in the [EOSC Beyond Helpdesk](https://helpdesk.sandbox.eosc-beyond.eu/#login).
+ticket in the [CESSDA Helpdesk](https://helpdesk.cessda.eu/#login).
