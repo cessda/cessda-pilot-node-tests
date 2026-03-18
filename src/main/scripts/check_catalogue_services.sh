@@ -3,11 +3,13 @@
 # Service Catalogue Resource Checker
 # Reads JSON from API and checks availability of each resource webpage
 #
-# Usage: ./check_catalogue_services.sh NODE_NAME [format]
-#   NODE_NAME: Node name to use as keyword filter (required)
-#   format: text, json, or both (default: both)
-#   Example: ./check_catalogue_services.sh my-node json
-#   Example: ./check_catalogue_services.sh my-node both
+# Usage: ./check_catalogue_services.sh NODE_NAME [format] [quantity] [dashboard_dir]
+#   NODE_NAME:     Node name to use as keyword filter (required)
+#   format:        text, json, or both (default: both)
+#   quantity:      Maximum number of services to retrieve (default: 10)
+#   dashboard_dir: Path to the dashboard data directory (default: current directory)
+#                  Output is written to <dashboard_dir>/<NODE_NAME>/
+#                  Example: ./check_catalogue_services.sh CESSDA json 10 ../../dashboard/data
 
 # Use either the Sandbox Resource Catalogue API or your Node's
 # Resource Catalogue API, depending on the Metric being evaluated
@@ -15,13 +17,11 @@
 API_BASE_URL="https://service-catalogue-staging.beyond.cessda.eu/api/service/all"
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-REPORT_FILE_TXT="catalogue_services_report_${TIMESTAMP}.txt"
-REPORT_FILE_JSON="catalogue_services_report_${TIMESTAMP}.json"
 
 # Check if NODE_NAME argument is provided
 if [ -z "$1" ]; then
     echo "Error: NODE_NAME is required"
-    echo "Usage: $0 NODE_NAME [text|json|both]"
+    echo "Usage: $0 NODE_NAME [text|json|both] [quantity] [dashboard_dir]"
     exit 1
 fi
 
@@ -45,13 +45,26 @@ case "$FORMAT" in
         ;;
     *)
         echo "Invalid format: $FORMAT"
-        echo "Usage: $0 NODE_NAME [text|json|both]"
+        echo "Usage: $0 NODE_NAME [text|json|both] [quantity] [dashboard_dir]"
         exit 1
         ;;
 esac
 
-# Opional QUANTITY argument
+# Optional QUANTITY argument
 QUANTITY="${3:-10}"
+
+# Optional dashboard data directory; output goes to <DASHBOARD_DIR>/<NODE_NAME>/
+DASHBOARD_DIR="${4:-../../dashboard/data}"
+
+if [ -n "$DASHBOARD_DIR" ]; then
+    OUTPUT_DIR="${DASHBOARD_DIR}/${NODE_NAME}"
+    mkdir -p "$OUTPUT_DIR" || { echo "Error: cannot create output directory $OUTPUT_DIR"; exit 1; }
+    REPORT_FILE_TXT="${OUTPUT_DIR}/catalogue_services_report.txt"
+    REPORT_FILE_JSON="${OUTPUT_DIR}/catalogue_services_report.json"
+else
+    REPORT_FILE_TXT="catalogue_services_report_${NODE_NAME}_${TIMESTAMP}.txt"
+    REPORT_FILE_JSON="catalogue_services_report_${NODE_NAME}_${TIMESTAMP}.json"
+fi
 
 # Construct API URL with NODE_NAME
 API_URL="${API_BASE_URL}?keyword=${NODE_NAME}&from=0&quantity=${QUANTITY}&order=asc"
@@ -81,7 +94,7 @@ CURL_OUTPUT="/tmp/curl_output_$$.log"
 CURL_RESPONSE="/tmp/curl_response_$$.json"
 
 # Execute curl with verbose output
-curl -v \
+curl \
   -X 'GET' \
   -H 'accept: application/json' \
   "$API_URL" \

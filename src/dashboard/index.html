@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOSC Beyond — Pilot Node Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange:    #E8572A;
+    --orange-dk: #C44520;
+    --orange-lt: #FDF1EC;
+    --black:     #111111;
+    --white:     #ffffff;
+    --grey-100:  #f5f5f5;
+    --grey-200:  #e8e8e8;
+    --grey-400:  #999999;
+    --grey-600:  #555555;
+    --green:     #2E7D32;
+    --green-lt:  #E8F5E9;
+    --amber:     #B45309;
+    --amber-lt:  #FEF3C7;
+    --red:       #B91C1C;
+    --red-lt:    #FEE2E2;
+    --blue:      #1565C0;
+    --blue-lt:   #E3F0FF;
+    --sans:      'Figtree', sans-serif;
+    --mono:      'IBM Plex Mono', monospace;
+    --serif:     'Source Serif 4', Georgia, serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--sans);
+    min-height: 100vh;
+  }
+
+  /* ── TOP NAV BAR ── */
+  .topbar {
+    background: var(--black);
+    padding: 0 2rem;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+
+  .topbar-logo {
+    height: 28px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .topbar-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.01em;
+  }
+
+  .topbar-name span {
+    color: var(--orange);
+  }
+
+  .topbar-right {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 2px solid var(--black);
+    background: var(--white);
+  }
+
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 2rem 2.5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--black);
+    max-width: 700px;
+  }
+
+  .header-desc {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--grey-600);
+    max-width: 560px;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .meta-bar {
+    margin-top: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--grey-200);
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--grey-600);
+  }
+
+  .meta-item .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 2.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--grey-400);
+  }
+
+  .section-title::after {
+    content: '';
+    display: inline-block;
+    margin-left: 1rem;
+    width: 40px;
+    height: 1px;
+    background: var(--grey-200);
+    vertical-align: middle;
+  }
+
+  /* ── SUMMARY STATS ── */
+  .summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0;
+    margin-bottom: 3rem;
+    border: 1px solid var(--grey-200);
+  }
+
+  .stat-card {
+    padding: 1.4rem 1.6rem;
+    border-right: 1px solid var(--grey-200);
+    position: relative;
+  }
+
+  .stat-card:last-child { border-right: none; }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 1.6rem; right: 1.6rem;
+    height: 2px;
+    background: var(--orange);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .stat-card:hover::after { transform: scaleX(1); }
+
+  .stat-value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--black);
+  }
+
+  .stat-value.orange { color: var(--orange); }
+  .stat-value.green  { color: var(--green); }
+  .stat-value.red    { color: var(--red); }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--grey-400);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── NODE CARDS ── */
+  .nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1px;
+    background: var(--grey-200);
+    border: 1px solid var(--grey-200);
+    margin-bottom: 3rem;
+  }
+
+  .node-card {
+    background: var(--white);
+    padding: 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: background 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .node-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--orange);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.2s ease;
+  }
+
+  .node-card:hover {
+    background: var(--grey-100);
+  }
+
+  .node-card:hover::before { transform: scaleY(1); }
+
+  .node-card.degraded .node-name { color: var(--amber); }
+  .node-card.offline  .node-name { color: var(--red); }
+
+  .node-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .node-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--black);
+  }
+
+  .node-id {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--grey-400);
+    margin-top: 0.3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 260px;
+  }
+
+  .status-badge {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 500;
+    padding: 0.2rem 0.55rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .status-ok       { background: var(--green-lt); color: var(--green); }
+  .status-degraded { background: var(--amber-lt); color: var(--amber); }
+  .status-offline  { background: var(--red-lt);   color: var(--red);   }
+  .status-unknown  { background: var(--grey-100); color: var(--grey-400); }
+
+  /* Capability bar */
+  .cap-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .cap-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--grey-400);
+    white-space: nowrap;
+    width: 80px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cap-bar-track {
+    flex: 1;
+    height: 3px;
+    background: var(--grey-200);
+    overflow: hidden;
+  }
+
+  .cap-bar-fill {
+    height: 100%;
+    background: var(--green);
+    transition: width 0.6s ease;
+  }
+
+  .cap-bar-fill.partial { background: var(--amber); }
+  .cap-bar-fill.zero    { background: var(--red); }
+
+  .cap-count {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--grey-600);
+    white-space: nowrap;
+    width: 40px;
+    text-align: right;
+  }
+
+  /* Report chips */
+  .report-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    padding: 0.2rem 0.5rem;
+    background: var(--blue-lt);
+    color: var(--blue);
+    border: 1px solid rgba(21,101,192,0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .chip.missing {
+    background: var(--grey-100);
+    color: var(--grey-400);
+    border-color: var(--grey-200);
+  }
+
+  .node-footer {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--grey-400);
+    padding-top: 1rem;
+    border-top: 1px solid var(--grey-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .arrow {
+    color: var(--orange);
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+
+  .node-card:hover .arrow {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+
+  /* Loading / error */
+  .state-msg {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--grey-400);
+    padding: 3rem;
+    text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 2px solid var(--black);
+    background: var(--black);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-logo {
+    height: 20px;
+    width: auto;
+    display: block;
+    opacity: 0.7;
+  }
+
+  .footer-text {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  @media (max-width: 640px) {
+    .header-inner { padding: 2rem 1rem 1.5rem; }
+    main { padding: 1.5rem 1rem 3rem; }
+    .stat-card { border-right: none; border-bottom: 1px solid var(--grey-200); }
+    .nodes-grid { grid-template-columns: 1fr; }
+    .summary-stats { display: flex; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="topbar-brand" href="./">
+    <img src="logo-eosc-beyond-horizontal-fc.png" alt="EOSC Beyond" class="topbar-logo">
+  </a>
+  <span class="topbar-right">PILOT NODE TESTS</span>
+</nav>
+
+<header>
+  <div class="header-inner">
+    <div class="eyebrow">EOSC Beyond · Infrastructure Monitoring</div>
+    <h1>Pilot Node Dashboard</h1>
+    <p class="header-desc" id="registry-source">Loading node registry…</p>
+    <div class="meta-bar">
+      <div class="meta-item"><span class="dot"></span><span id="generated-ts">—</span></div>
+      <div class="meta-item">Nodes registered: <strong id="node-count">—</strong></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="summary-stats" class="summary-stats"></div>
+
+  <div class="section-header">
+    <span class="section-title">All nodes</span>
+  </div>
+  <div id="nodes-grid" class="nodes-grid">
+    <div class="state-msg">Loading node registry…</div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-brand">
+    <img src="logo-eosc-beyond-horizontal-fc.png" alt="EOSC Beyond" class="footer-logo">
+  </div>
+  <span class="footer-text" id="footer-data-note">Data loaded from <code>data/</code></span>
+</footer>
+
+<script>
+const REPORT_TYPES = [
+  { key: 'endpoint',  file: 'endpoint_report.json',          label: 'Endpoints' },
+  { key: 'catalogue', file: 'catalogue_services_report.json', label: 'Catalogue' },
+  { key: 'argo',      file: 'argo_uptime_report.json', fileFallback: 'argo_uptime_report.txt', label: 'ARGO Uptime' },
+];
+
+async function tryFetch(url) {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    return r;
+  } catch { return null; }
+}
+
+async function loadRegistry() {
+  const r = await tryFetch('data/node_registry_summary.json');
+  if (!r) throw new Error('Could not load node_registry_summary.json');
+  return r.json();
+}
+
+async function probeReports(nodeName) {
+  const results = {};
+  await Promise.all(REPORT_TYPES.map(async rt => {
+    const primary = await tryFetch(`data/${encodeURIComponent(nodeName)}/${rt.file}`);
+    if (primary) { results[rt.key] = true; return; }
+    if (rt.fileFallback) {
+      const fallback = await tryFetch(`data/${encodeURIComponent(nodeName)}/${rt.fileFallback}`);
+      results[rt.key] = !!fallback;
+    } else {
+      results[rt.key] = false;
+    }
+  }));
+  return results;
+}
+
+function statusBadge(node) {
+  if (node.total_capabilities === 0) return ['offline', 'No data'];
+  const pct = node.available_capabilities / node.total_capabilities;
+  if (pct === 1) return ['ok', 'All systems go'];
+  if (pct > 0.5) return ['degraded', 'Degraded'];
+  return ['offline', 'Degraded'];
+}
+
+function capFillClass(avail, total) {
+  if (total === 0) return 'zero';
+  const p = avail / total;
+  if (p === 1) return '';
+  if (p > 0.5) return 'partial';
+  return 'zero';
+}
+
+function capColour(avail, total) {
+  if (total === 0) return 'var(--red)';
+  const p = avail / total;
+  if (p === 1)    return 'var(--green)';
+  if (p > 0.5)   return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function pctColour(pct) {
+  if (pct >= 99) return 'green';
+  if (pct >= 95) return 'orange';
+  return 'red';
+}
+
+function renderNodeCard(node, reports) {
+  const [statusClass, statusText] = statusBadge(node);
+  const pct = node.total_capabilities > 0
+    ? Math.round((node.available_capabilities / node.total_capabilities) * 100)
+    : 0;
+  const fillClass = capFillClass(node.available_capabilities, node.total_capabilities);
+  const countColour = capColour(node.available_capabilities, node.total_capabilities);
+
+  const chips = REPORT_TYPES.map(rt =>
+    `<span class="chip${reports[rt.key] ? '' : ' missing'}">${rt.label}</span>`
+  ).join('');
+
+  return `
+  <a class="node-card ${statusClass === 'ok' ? '' : statusClass}" href="node.html#${encodeURIComponent(node.name)}">
+    <div class="node-header">
+      <div>
+        <div class="node-name">${node.name}</div>
+        <div class="node-id">${node.endpoint}</div>
+      </div>
+      <span class="status-badge status-${statusClass}">${statusText}</span>
+    </div>
+    <div class="cap-row">
+      <span class="cap-label">Capabilities</span>
+      <div class="cap-bar-track">
+        <div class="cap-bar-fill ${fillClass}" style="width:${pct}%"></div>
+      </div>
+      <span class="cap-count" style="color:${countColour}">${node.available_capabilities}/${node.total_capabilities}</span>
+    </div>
+    <div class="report-chips">${chips}</div>
+    <div class="node-footer">
+      <span>View node detail</span>
+      <span class="arrow">→</span>
+    </div>
+  </a>`;
+}
+
+function renderSummaryStats(registry, nodeStatuses) {
+  const totalNodes  = registry.nodes.length;
+  const okNodes     = nodeStatuses.filter(s => s === 'ok').length;
+  const degraded    = totalNodes - okNodes;
+  const totalCaps   = registry.nodes.reduce((a, n) => a + n.total_capabilities, 0);
+  const availCaps   = registry.nodes.reduce((a, n) => a + n.available_capabilities, 0);
+  const upPct       = totalCaps > 0 ? Math.round(availCaps / totalCaps * 100) : 0;
+
+  // "Fully operational" count is always green — it represents nodes that are working
+  const okColour = 'green';
+
+  // "Degraded" count is red if any nodes are degraded, green if none
+  const degradedColour = degraded > 0 ? 'red' : 'green';
+
+  // Colour for uptime % and available caps use the same thresholds as ARGO
+  const uptimeColour = pctColour(upPct);
+  const capsPct      = totalCaps > 0 ? Math.round(availCaps / totalCaps * 100) : 0;
+  const capsColour   = pctColour(capsPct);
+
+  document.getElementById('summary-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-value orange">${totalNodes}</div><div class="stat-label">Total nodes</div></div>
+    <div class="stat-card"><div class="stat-value ${okColour}">${okNodes}</div><div class="stat-label">Fully operational</div></div>
+    <div class="stat-card"><div class="stat-value ${degradedColour}">${degraded}</div><div class="stat-label">Degraded / no data</div></div>
+    <div class="stat-card"><div class="stat-value ${uptimeColour}">${upPct}%</div><div class="stat-label">Capability uptime</div></div>
+    <div class="stat-card"><div class="stat-value ${capsColour}">${availCaps}<span style="font-size:1.25rem;color:var(--grey-400)">/${totalCaps}</span></div><div class="stat-label">Available caps</div></div>
+  `;
+}
+
+function isFileProtocol() {
+  return window.location.protocol === 'file:';
+}
+
+function showCorsError(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `
+    <div style="
+      background: var(--white);
+      border: 2px solid var(--black);
+      border-left: 4px solid var(--orange);
+      padding: 2rem 2.5rem;
+      max-width: 600px;
+      font-family: var(--mono);
+    ">
+      <div style="color:var(--orange);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;">
+        HTTP server required
+      </div>
+      <div style="color:var(--black);font-size:0.8rem;line-height:1.7;margin-bottom:1.25rem;">
+        Browsers block file access when opening HTML files directly from disk.
+        Run one of the following from <code style="background:var(--grey-100);padding:0.1em 0.3em">src/main/dashboard/</code>,
+        then open <code style="background:var(--grey-100);padding:0.1em 0.3em">http://localhost:8080</code>.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="background:var(--grey-100);padding:0.6rem 0.9rem;border-left:3px solid var(--orange);">
+          <span style="color:var(--grey-400);font-size:0.55rem;display:block;margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.08em;">Python 3</span>
+          <code style="color:var(--black);font-size:0.75rem;">python3 -m http.server 8080</code>
+        </div>
+        <div style="background:var(--grey-100);padding:0.6rem 0.9rem;border-left:3px solid var(--orange);">
+          <span style="color:var(--grey-400);font-size:0.55rem;display:block;margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.08em;">Node.js</span>
+          <code style="color:var(--black);font-size:0.75rem;">npx serve .</code>
+        </div>
+        <div style="background:var(--grey-100);padding:0.6rem 0.9rem;border-left:3px solid var(--orange);">
+          <span style="color:var(--grey-400);font-size:0.55rem;display:block;margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.08em;">PHP</span>
+          <code style="color:var(--black);font-size:0.75rem;">php -S localhost:8080</code>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function init() {
+  if (isFileProtocol()) {
+    document.getElementById('registry-source').textContent =
+      'Requires an HTTP server — see below';
+    showCorsError('nodes-grid');
+    return;
+  }
+
+  try {
+    const registry = await loadRegistry();
+
+    document.getElementById('registry-source').textContent = registry.registry_source || '';
+    document.getElementById('generated-ts').textContent = 'Generated: ' + (registry.generated || '—');
+    document.getElementById('node-count').textContent = registry.nodes.length;
+
+    const reportProbes = await Promise.all(registry.nodes.map(n => probeReports(n.name)));
+    const nodeStatuses = registry.nodes.map(n => statusBadge(n)[0]);
+
+    renderSummaryStats(registry, nodeStatuses);
+
+    const grid = document.getElementById('nodes-grid');
+    grid.innerHTML = registry.nodes.map((node, i) =>
+      renderNodeCard(node, reportProbes[i])
+    ).join('');
+
+  } catch (e) {
+    document.getElementById('nodes-grid').innerHTML =
+      `<div class="state-msg">&#9888; ${e.message}</div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

@@ -6,7 +6,7 @@
   "endpoint": "https://providers.sandbox.eosc-beyond.eu/node/endpoint",
   "total_capabilities": 9,
   "available_capabilities": 2,
-  "report_file": "endpoint_report_EOSC-Beyond_20260302_173134.json"
+  "report_file": "endpoint_report.json"
 }
 ,
 {
@@ -14,7 +14,7 @@
   "endpoint": "https://endpoint.mrezhi.net/api/endpoint",
   "total_capabilities": 0,
   "available_capabilities": 0,
-  "report_file": "endpoint_report_NI4OS-EUROPE_20260302_173134.json"
+  "report_file": "endpoint_report.json"
 }
 ,
 {
@@ -22,6 +22,6 @@
   "endpoint": "https://node-endpoint-staging.beyond.cessda.eu/api/endpoint",
   "total_capabilities": 12,
   "available_capabilities": 12,
-  "report_file": "endpoint_report_CESSDA_20260302_173134.json"
+  "report_file": "endpoint_report.json"
 }]
 }

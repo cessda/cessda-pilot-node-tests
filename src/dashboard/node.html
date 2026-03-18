@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Node Detail — EOSC Beyond Pilot Node Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange:    #E8572A;
+    --orange-dk: #C44520;
+    --orange-lt: #FDF1EC;
+    --black:     #111111;
+    --white:     #ffffff;
+    --grey-100:  #f5f5f5;
+    --grey-200:  #e8e8e8;
+    --grey-400:  #999999;
+    --grey-600:  #555555;
+    --green:     #2E7D32;
+    --green-lt:  #E8F5E9;
+    --amber:     #B45309;
+    --amber-lt:  #FEF3C7;
+    --red:       #B91C1C;
+    --red-lt:    #FEE2E2;
+    --sans:      'Figtree', sans-serif;
+    --mono:      'IBM Plex Mono', monospace;
+    --serif:     'Source Serif 4', Georgia, serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--sans);
+    min-height: 100vh;
+  }
+
+  /* ── TOP NAV BAR ── */
+  .topbar {
+    background: var(--black);
+    padding: 0 2rem;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+
+  .topbar-logo {
+    height: 28px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .topbar-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .topbar-name span { color: var(--orange); }
+
+  .topbar-right {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 2px solid var(--black);
+    background: var(--white);
+  }
+
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 2rem 1.75rem;
+  }
+
+  .breadcrumb {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--grey-400);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .breadcrumb a {
+    color: var(--orange);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--orange);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 14px;
+    height: 2px;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--black);
+  }
+
+  .node-meta {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--grey-400);
+    margin-top: 0.5rem;
+    line-height: 1.8;
+  }
+
+  .node-meta a { color: var(--orange); text-decoration: none; }
+  .node-meta a:hover { text-decoration: underline; }
+
+  /* Node switcher */
+  .node-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+
+  .switcher-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--grey-400);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  #node-select {
+    background: var(--white);
+    border: 1.5px solid var(--black);
+    color: var(--black);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.45rem 2rem 0.45rem 0.75rem;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23111111'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+    transition: border-color 0.15s;
+    border-radius: 0;
+  }
+
+  #node-select:hover { border-color: var(--orange); }
+  #node-select:focus { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-lt); }
+
+  .status-badge {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 500;
+    padding: 0.22rem 0.55rem;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .status-ok       { background: var(--green-lt); color: var(--green); }
+  .status-degraded { background: var(--amber-lt); color: var(--amber); }
+  .status-offline  { background: var(--red-lt);   color: var(--red);   }
+  .status-unknown  { background: var(--grey-100); color: var(--grey-400); }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  #content { display: flex; flex-direction: column; gap: 0; }
+
+  .state-msg {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--grey-400);
+    padding: 3rem;
+    text-align: center;
+  }
+
+  /* ── CAPABILITY OVERVIEW ── */
+  .overview-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0;
+    border: 1px solid var(--grey-200);
+    margin-bottom: 2rem;
+  }
+
+  .ov-card {
+    padding: 1.25rem 1.5rem;
+    border-right: 1px solid var(--grey-200);
+    position: relative;
+  }
+
+  .ov-card:last-child { border-right: none; }
+
+  .ov-value {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--black);
+    line-height: 1;
+  }
+
+  .ov-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--grey-400);
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── PANELS ── */
+  .panel {
+    border: 1px solid var(--grey-200);
+    border-top: none;
+    background: var(--white);
+  }
+
+  .panel:first-of-type { border-top: 1px solid var(--grey-200); }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--grey-200);
+    background: var(--grey-100);
+    gap: 1rem;
+    flex-wrap: wrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .panel-header:hover { background: #eeeeee; }
+
+  .panel-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--black);
+  }
+
+  .panel-icon {
+    width: 24px; height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    background: var(--orange);
+    color: var(--white);
+  }
+
+  .panel-icon.icon-catalogue { background: var(--black); }
+  .panel-icon.icon-argo      { background: var(--green); }
+
+  .panel-meta {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--grey-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .panel-toggle {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--grey-400);
+    margin-left: auto;
+    transition: transform 0.2s;
+  }
+
+  .panel.collapsed .panel-toggle { transform: rotate(-90deg); }
+  .panel.collapsed .panel-body,
+  .panel.collapsed .panel-missing { display: none; }
+
+  .panel-body { padding: 1.5rem; }
+
+  .panel-missing {
+    padding: 2rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--grey-400);
+    background: var(--grey-100);
+    border-left: 3px solid var(--grey-200);
+  }
+
+  /* ── ENDPOINT REPORT ── */
+  .ep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1px;
+    background: var(--grey-200);
+    border: 1px solid var(--grey-200);
+  }
+
+  .ep-item {
+    background: var(--white);
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .ep-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .ep-type {
+    font-size: 0.78rem;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ep-version {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--grey-400);
+  }
+
+  .ep-url {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--grey-400);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ep-url a { text-decoration: none; }
+  .ep-url a:hover { text-decoration: underline; }
+
+  .http-badge {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    padding: 0.15rem 0.4rem;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .http-2xx { background: var(--green-lt);  color: var(--green); }
+  .http-3xx { background: var(--amber-lt); color: var(--amber); }
+  .http-4xx { background: var(--red-lt);   color: var(--red); }
+  .http-5xx { background: var(--red-lt);   color: var(--red); }
+
+  .legal-row {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--grey-200);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--grey-400);
+  }
+
+  .legal-row a { color: var(--orange-dk); text-decoration: none; }
+  .legal-row a:hover { text-decoration: underline; }
+
+  /* ── CATALOGUE REPORT ── */
+  .cat-table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+  }
+
+  thead tr { border-bottom: 2px solid var(--black); }
+
+  th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    color: var(--black);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--grey-200);
+    transition: background 0.12s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--grey-100); }
+
+  td { padding: 0.6rem 0.75rem; vertical-align: middle; }
+
+  .td-name {
+    font-weight: 600;
+    color: var(--black);
+    font-family: var(--sans);
+    font-size: 0.78rem;
+  }
+
+  .td-abbr { font-weight: 500; }
+  .td-id   { color: var(--grey-400); font-size: 0.58rem; }
+  .td-link a { color: var(--orange-dk); text-decoration: none; }
+  .td-link a:hover { text-decoration: underline; }
+
+  /* ── ARGO UPTIME ── */
+  .argo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--grey-200);
+    border: 1px solid var(--grey-200);
+  }
+
+  .argo-item {
+    background: var(--white);
+    padding: 1.25rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .argo-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .argo-metrics { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .argo-metric-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .argo-metric-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--grey-400);
+    width: 80px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .argo-bar-track {
+    flex: 1;
+    height: 3px;
+    background: var(--grey-200);
+    overflow: hidden;
+  }
+
+  .argo-bar-fill {
+    height: 100%;
+    background: var(--orange);
+    transition: width 0.7s ease;
+  }
+
+  .argo-pct {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    width: 44px;
+    text-align: right;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+
+  .argo-days {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--grey-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 2px solid var(--black);
+    background: var(--black);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-logo {
+    height: 20px;
+    width: auto;
+    display: block;
+    opacity: 0.7;
+  }
+
+  .footer-text {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  @media (max-width: 640px) {
+    .header-inner { padding: 1.5rem 1rem 1.25rem; }
+    main { padding: 1.5rem 1rem 3rem; }
+    .panel-body { padding: 1rem; }
+    .overview-row { display: flex; flex-wrap: wrap; }
+    .ov-card { border-right: none; border-bottom: 1px solid var(--grey-200); flex: 1 1 50%; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="topbar-brand" href="/">
+    <img src="logo-eosc-beyond-horizontal-fc.png" alt="EOSC Beyond" class="topbar-logo">
+  </a>
+  <span class="topbar-right">PILOT NODE TESTS</span>
+</nav>
+
+<header>
+  <div class="header-inner">
+    <div class="breadcrumb">
+      <a href="/">← All Nodes</a>
+      <span>/</span>
+      <span id="bc-node">—</span>
+    </div>
+    <div class="header-top">
+      <div>
+        <div class="eyebrow">Node Detail</div>
+        <h1 id="node-title">Loading…</h1>
+        <div class="node-meta" id="node-meta"></div>
+      </div>
+      <div class="node-switcher">
+        <span class="switcher-label">Switch node:</span>
+        <select id="node-select"><option>Loading…</option></select>
+        <span id="node-status-badge" class="status-badge status-unknown">—</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="content">
+    <div class="state-msg">Loading node data…</div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-brand">
+    <img src="logo-eosc-beyond-horizontal-fc.png" alt="EOSC Beyond" class="footer-logo">
+  </div>
+  <span class="footer-text" id="footer-gen"></span>
+</footer>
+
+<script>
+function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
+
+function getParam(key) {
+  // Read from hash fragment (#NODENAME) — survives all server routing schemes
+  if (key === 'node') {
+    const hash = window.location.hash.slice(1); // strip leading #
+    return hash ? decodeURIComponent(hash) : null;
+  }
+  return new URLSearchParams(window.location.search).get(key);
+}
+
+function setParam(key, val) {
+  if (key === 'node') {
+    window.location.hash = encodeURIComponent(val);
+    return;
+  }
+  const u = new URL(window.location.href);
+  u.searchParams.set(key, val);
+  window.history.pushState({}, '', u.toString());
+}
+
+async function tryFetch(url) {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    return r;
+  } catch { return null; }
+}
+
+function httpBadgeClass(code) {
+  if (!code) return '';
+  const c = String(code);
+  if (c.startsWith('2')) return 'http-2xx';
+  if (c.startsWith('3')) return 'http-3xx';
+  if (c.startsWith('4')) return 'http-4xx';
+  if (c.startsWith('5')) return 'http-5xx';
+  return '';
+}
+
+// Returns the CSS colour variable matching an http-badge class
+function httpColour(cls) {
+  if (cls === 'http-2xx') return 'var(--green)';
+  if (cls === 'http-3xx') return 'var(--amber)';
+  if (cls === 'http-4xx' || cls === 'http-5xx') return 'var(--red)';
+  return 'var(--grey-400)';
+}
+
+// Returns a CSS colour variable based on a percentage value
+// green ≥ 99%, amber ≥ 95%, red < 95%
+function argoColour(num) {
+  if (num >= 99) return 'var(--green)';
+  if (num >= 95) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+// ── Report renderers ──────────────────────────────────────────
+
+function renderEndpointReport(data) {
+  const caps = data.capabilities || [];
+  const cards = caps.map(c => {
+    const cls = httpBadgeClass(c.http_code);
+    const urlColour = httpColour(cls);
+    return `
+    <div class="ep-item">
+      <div class="ep-row">
+        <span class="ep-type" title="${c.capability_type}">${c.capability_type}</span>
+        <span class="ep-version">${c.version || ''}</span>
+        <span class="http-badge ${cls}">${c.http_code || c.status}</span>
+      </div>
+      <div class="ep-url"><a href="${c.endpoint}" target="_blank" rel="noopener" style="color:${urlColour}">${c.endpoint}</a></div>
+    </div>`;
+  }).join('');
+
+  const legal = data.legal_entity
+    ? `<div class="legal-row">Legal entity: ${data.legal_entity.name}${data.legal_entity.ror_id ? ` · <a href="${data.legal_entity.ror_id}" target="_blank">ROR ↗</a>` : ''}</div>`
+    : '';
+
+  return `
+  <div class="panel-body">
+    <div class="ep-grid">${cards || '<div class="state-msg">No capabilities listed.</div>'}</div>
+    ${legal}
+  </div>`;
+}
+
+function renderCatalogueReport(data) {
+  const svcs = data.services || [];
+  const rows = svcs.map(s => {
+    const cls = httpBadgeClass(s.http_code);
+    const abbrColour = httpColour(cls);
+    return `<tr>
+      <td class="td-name">${s.name}</td>
+      <td class="td-abbr" style="color:${abbrColour}">${s.abbreviation || '—'}</td>
+      <td class="td-id">${s.service_id || '—'}</td>
+      <td class="td-link"><a href="${s.webpage}" target="_blank" rel="noopener">↗</a></td>
+      <td><span class="http-badge ${cls}">${s.http_code || s.status}</span></td>
+    </tr>`;
+  }).join('');
+
+  return `
+  <div class="panel-body">
+    <div style="font-family:var(--mono);font-size:0.6rem;color:var(--grey-400);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;">
+      Showing ${svcs.length} of ${data.total_services} total services
+    </div>
+    <div class="cat-table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Abbr</th><th>Service ID</th><th>Page</th><th>HTTP</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="5" style="color:var(--grey-400);padding:1rem">No services listed.</td></tr>'}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// Shared renderer — accepts a normalised list of endpoint objects
+// Each object: { name, uptime, availability, reliability, days, period }
+function renderArgoCards(endpoints, period) {
+  const metricKeys = [
+    { key: 'uptime',       label: 'Uptime' },
+    { key: 'availability', label: 'Availability' },
+    { key: 'reliability',  label: 'Reliability' },
+  ];
+
+  const cards = endpoints.map(ep => {
+    const bars = metricKeys.map(({ key, label }) => {
+      const num = ep[key] ?? 0;
+      const display = num.toFixed(2) + '%';
+      const colour = argoColour(num);
+      return `
+      <div class="argo-metric-row">
+        <span class="argo-metric-label">${label}</span>
+        <div class="argo-bar-track"><div class="argo-bar-fill" style="width:${num}%;background:${colour}"></div></div>
+        <span class="argo-pct" style="color:${colour}">${display}</span>
+      </div>`;
+    }).join('');
+    return `
+    <div class="argo-item">
+      <div class="argo-name">${ep.name}</div>
+      <div class="argo-metrics">${bars}</div>
+      ${ep.days ? `<div class="argo-days">${ep.days} days monitored</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const periodStr = period
+    ? `<div style="font-family:var(--mono);font-size:0.6rem;color:var(--grey-400);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;">Period: ${period}</div>`
+    : '';
+
+  return `
+  <div class="panel-body">
+    ${periodStr}
+    <div class="argo-grid">${cards || '<div class="state-msg">No endpoint data found.</div>'}</div>
+  </div>`;
+}
+
+// JSON format (from check_service_uptime.sh)
+function renderArgoJson(data) {
+  const period = data.period
+    ? `${data.period.start} to ${data.period.end}`
+    : null;
+  const endpoints = (data.endpoints || []).map(ep => ({
+    name:         ep.name,
+    uptime:       ep.uptime_percentage,
+    availability: ep.average_availability,
+    reliability:  ep.average_reliability,
+    days:         ep.days_monitored,
+  }));
+  return renderArgoCards(endpoints, period);
+}
+
+// Plain-text format (legacy .txt files)
+function renderArgoTxt(text) {
+  const endpoints = [];
+  let current = null;
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    if (line.startsWith('Endpoint:')) {
+      if (current) endpoints.push(current);
+      current = { name: line.replace('Endpoint:', '').trim(), raw: {} };
+    } else if (current) {
+      const m = line.match(/^(Uptime|Availability|Reliability|Days Monitored):\s*(.+)$/);
+      if (m) current.raw[m[1]] = m[2];
+    }
+  }
+  if (current) endpoints.push(current);
+
+  const periodMatch = text.match(/Period:\s*(.+)/);
+  const normalised = endpoints.map(ep => ({
+    name:         ep.name,
+    uptime:       parseFloat(ep.raw['Uptime']) || 0,
+    availability: parseFloat(ep.raw['Availability']) || 0,
+    reliability:  parseFloat(ep.raw['Reliability']) || 0,
+    days:         ep.raw['Days Monitored'] || null,
+  }));
+  return renderArgoCards(normalised, periodMatch?.[1] ?? null);
+}
+
+// ── Panel definitions ─────────────────────────────────────────
+
+const PANELS = [
+  {
+    key: 'endpoint',
+    file: 'endpoint_report.json',
+    title: 'Endpoint Capabilities',
+    icon: '⬡',
+    iconClass: 'icon-endpoint',
+    metaFn: d => `${d.available_capabilities}/${d.total_capabilities} available`,
+    renderFn: async (r) => renderEndpointReport(await r.json()),
+  },
+  {
+    key: 'catalogue',
+    file: 'catalogue_services_report.json',
+    title: 'Catalogue Services',
+    icon: '◈',
+    iconClass: 'icon-catalogue',
+    metaFn: d => `${d.total_services} total services`,
+    renderFn: async (r) => renderCatalogueReport(await r.json()),
+  },
+  {
+    key: 'argo',
+    file: 'argo_uptime_report.json',
+    fileFallback: 'argo_uptime_report.txt',
+    title: 'ARGO Uptime',
+    icon: '◎',
+    iconClass: 'icon-argo',
+    metaFn: () => '',
+    renderFn: async (r, isFallback) => {
+      if (isFallback) return renderArgoTxt(await r.text());
+      return renderArgoJson(await r.json());
+    },
+  },
+];
+
+function renderOverview(epData) {
+  if (!epData) return '';
+  const { available_capabilities: av, total_capabilities: tot } = epData;
+  const pct = tot > 0 ? Math.round(av / tot * 100) : 0;
+  const col = pct === 100 ? 'var(--green)' : pct > 50 ? 'var(--amber)' : 'var(--red)';
+  return `
+  <div class="overview-row" style="margin-bottom:0">
+    <div class="ov-card"><div class="ov-value" style="color:${col}">${pct}%</div><div class="ov-label">Available</div></div>
+    <div class="ov-card"><div class="ov-value" style="color:var(--green)">${av}</div><div class="ov-label">Available caps</div></div>
+    <div class="ov-card"><div class="ov-value">${tot}</div><div class="ov-label">Total caps</div></div>
+    <div class="ov-card"><div class="ov-value" style="color:var(--red)">${tot - av}</div><div class="ov-label">Unavailable</div></div>
+  </div>`;
+}
+
+async function loadNode(nodeName) {
+  const content = document.getElementById('content');
+  content.innerHTML = '<div class="state-msg">Loading…</div>';
+
+  document.getElementById('node-title').textContent = nodeName;
+  document.getElementById('bc-node').textContent = nodeName;
+  document.title = `${nodeName} — EOSC Beyond Node Dashboard`;
+
+  const base = `data/${encodeURIComponent(nodeName)}/`;
+  // Fetch primary files; for panels with a fallback, try that if primary is absent
+  const fetches = await Promise.all(PANELS.map(async p => {
+    const primary = await tryFetch(base + p.file);
+    if (primary) return { res: primary, isFallback: false };
+    if (p.fileFallback) {
+      const fallback = await tryFetch(base + p.fileFallback);
+      if (fallback) return { res: fallback, isFallback: true };
+    }
+    return null;
+  }));
+
+  let epData = null;
+  const epIdx = PANELS.findIndex(p => p.key === 'endpoint');
+  if (fetches[epIdx]) {
+    try { epData = await fetches[epIdx].res.clone().json(); } catch {}
+  }
+
+  if (epData) {
+    const pct = epData.total_capabilities > 0
+      ? epData.available_capabilities / epData.total_capabilities : 0;
+    const badge = document.getElementById('node-status-badge');
+    if (pct === 1)       { badge.className = 'status-badge status-ok';       badge.textContent = 'All systems go'; }
+    else if (pct > 0.5)  { badge.className = 'status-badge status-degraded'; badge.textContent = 'Degraded'; }
+    else                 { badge.className = 'status-badge status-offline';  badge.textContent = 'Degraded'; }
+    document.getElementById('node-meta').innerHTML =
+      `${epData.node_pid || ''} · <a href="${epData.node_endpoint}" target="_blank">${epData.node_endpoint}</a>`;
+  }
+
+  const panelHTMLs = await Promise.all(PANELS.map(async (p, i) => {
+    const fetch = fetches[i];
+    if (!fetch) {
+      return `<div class="panel" id="panel-${p.key}">
+        <div class="panel-header" onclick="this.closest('.panel').classList.toggle('collapsed')">
+          <div class="panel-title"><div class="panel-icon ${p.iconClass}">${p.icon}</div>${p.title}</div>
+          <span class="panel-toggle">▾</span>
+        </div>
+        <div class="panel-missing">No report file found for this node &mdash; expected: <code>${base}${p.file}</code>${p.fileFallback ? ` or <code>${base}${p.fileFallback}</code>` : ''}</div>
+      </div>`;
+    }
+
+    const { res, isFallback } = fetch;
+    let body = '', meta = '';
+    try {
+      body = await p.renderFn(res, isFallback);
+      if (p.key !== 'argo') {
+        try {
+          const d = await fetches[i].res.clone().json();
+          meta = p.metaFn(d);
+          if (d.generated) document.getElementById('footer-gen').textContent = 'Generated: ' + d.generated;
+        } catch {}
+      }
+    } catch (e) {
+      body = `<div class="panel-missing">Error rendering: ${e.message}</div>`;
+    }
+
+    return `<div class="panel" id="panel-${p.key}">
+      <div class="panel-header" onclick="this.closest('.panel').classList.toggle('collapsed')">
+        <div class="panel-title"><div class="panel-icon ${p.iconClass}">${p.icon}</div>${p.title}</div>
+        ${meta ? `<div class="panel-meta">${meta}</div>` : ''}
+        <span class="panel-toggle">▾</span>
+      </div>
+      ${body}
+    </div>`;
+  }));
+
+  content.innerHTML = renderOverview(epData) + panelHTMLs.join('');
+}
+
+// ── file:// guard ─────────────────────────────────────────────
+
+function isFileProtocol() { return window.location.protocol === 'file:'; }
+
+function showCorsError() {
+  document.getElementById('node-title').textContent = 'HTTP server required';
+  document.getElementById('node-status-badge').className = 'status-badge status-offline';
+  document.getElementById('node-status-badge').textContent = 'Error';
+  document.getElementById('content').innerHTML = `
+    <div style="
+      background:var(--white);
+      border:2px solid var(--black);
+      border-left:4px solid var(--orange);
+      padding:2rem 2.5rem;
+      max-width:600px;
+      font-family:var(--mono);
+    ">
+      <div style="color:var(--orange);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;">HTTP server required</div>
+      <div style="color:var(--black);font-size:0.8rem;line-height:1.7;margin-bottom:1.25rem;">
+        Browsers block file access when opening HTML files directly from disk.
+        Run one of the following from <code style="background:var(--grey-100);padding:0.1em 0.3em">src/main/dashboard/</code>,
+        then open <code style="background:var(--grey-100);padding:0.1em 0.3em">http://localhost:8080</code>.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="background:var(--grey-100);padding:0.6rem 0.9rem;border-left:3px solid var(--orange);">
+          <span style="color:var(--grey-400);font-size:0.55rem;display:block;margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.08em;">Python 3</span>
+          <code style="color:var(--black);font-size:0.75rem;">python3 -m http.server 8080</code>
+        </div>
+        <div style="background:var(--grey-100);padding:0.6rem 0.9rem;border-left:3px solid var(--orange);">
+          <span style="color:var(--grey-400);font-size:0.55rem;display:block;margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.08em;">Node.js</span>
+          <code style="color:var(--black);font-size:0.75rem;">npx serve .</code>
+        </div>
+        <div style="background:var(--grey-100);padding:0.6rem 0.9rem;border-left:3px solid var(--orange);">
+          <span style="color:var(--grey-400);font-size:0.55rem;display:block;margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.08em;">PHP</span>
+          <code style="color:var(--black);font-size:0.75rem;">php -S localhost:8080</code>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Registry & switcher ───────────────────────────────────────
+
+async function init() {
+  if (isFileProtocol()) {
+    showCorsError();
+    return;
+  }
+
+  let registry;
+  try {
+    const r = await tryFetch('data/node_registry_summary.json');
+    if (!r) throw new Error('Registry not found');
+    registry = await r.json();
+  } catch (e) {
+    document.getElementById('content').innerHTML =
+      `<div class="state-msg">&#9888; Could not load registry: ${e.message}</div>`;
+    return;
+  }
+
+  const nodes = registry.nodes || [];
+  const sel = document.getElementById('node-select');
+  sel.innerHTML = nodes.map(n => `<option value="${n.name}">${n.name}</option>`).join('');
+
+  const requested = getParam('node');
+  const target = nodes.find(n => n.name === requested) ? requested : nodes[0]?.name;
+
+  if (!target) {
+    document.getElementById('content').innerHTML = '<div class="state-msg">No nodes in registry.</div>';
+    return;
+  }
+
+  sel.value = target;
+
+  // Attach the change listener only after sel.value is set, so populating
+  // the <select> above cannot accidentally trigger a loadNode() call.
+  sel.addEventListener('change', () => {
+    setParam('node', sel.value);
+    loadNode(sel.value);
+  });
+
+  loadNode(target);
+}
+
+init();
+</script>
+</body>
+</html>

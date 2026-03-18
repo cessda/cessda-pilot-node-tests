@@ -1,26 +1,62 @@
-# Pilot Node tests
+# Pilot Node Tests
 
-[![SQAaaS badge shields.io](https://img.shields.io/badge/sqaaas%20software-silver-lightgrey)](https://api.eu.badgr.io/public/assertions/UGHamc4ZSqCGkO_9zchtzg "SQAaaS silver badge achieved")
+This repository contains the scripts for testing some of the functionality of
+an EOSC Beyond Pilot Node.
 
-This repository contains the source code for testing some of the functionality
-of an EOSC Beyond Pilot Node.
+See [METRICS](METRICS.md) for details of which script to use for which metric.
 
-See [METRICS](METRICS.md) for details of which script to use for which Metric.
+## Repository Structure
 
-The [resources](./src/main/resources/) directory contains examples of outputs
-from each of the scripts, in both plain text and Json formats.
+```text
+cessda-pilot-node-tests/
+├── CHECK_CATALOGUE_SERVICES.md
+├── CHECK_NODE_CAPABILITIES.md
+├── CHECK_SERVICE_UPTIME.md
+├── README.md
+├── METRICS.md
+├── CONTRIBUTING.md
+├── CONTRIBUTORS.md
+├── LICENSE.txt
+├── CITATION.cff
+└── src/
+    └── main/
+        ├── scripts/
+        │   ├── check_node_capabilities.sh
+        │   ├── check_catalogue_services.sh
+        │   └── check_service_uptime.sh
+        └── dashboard/
+            ├── index.html
+            ├── node.html
+            ├── logo-eosc-beyond-horizontal-fc.png
+            ├── README.md
+            └── data/
+                ├── node_registry_summary.json
+                ├── CESSDA/
+                │   ├── endpoint_report.json
+                │   ├── catalogue_services_report.json
+                │   └── argo_uptime_report.json
+                ├── EOSC-Beyond/
+                └── NI4OS-EUROPE/
+```
+
+Report files in `src/main/dashboard/data/` use canonical names (no timestamp,
+no node name suffix). Each script defaults to writing directly into the
+appropriate node subdirectory when run from `src/main/scripts/`, so the
+dashboard data is updated in place without any manual file management.
 
 ## Configuration
 
-See [Node Capabilities checker](NODE_CAPABILITIES_README.md)
-and [Service Uptime checker](SERVIVCE_UPTIME_README.md)
-and [Exchange Services checker](SERVICE_CATALOGUE_README.md)
-for details of what they do and how to run them.
+See the following for details of what each script does and how to run it:
+
+- [Check Node Capabilities](CHECK_NODE_CAPABILITIES.md)
+- [Check Catalogue Services](CHECK_CATALOGUE_SERVICES.md)
+- [Check Service Uptime](CHECK_SERVICE_UPTIME.md)
+- [Dashboard](DASHBOARD_README.md)
 
 ## Contributing
 
-Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct,
-and the process for submitting pull requests to us.
+Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct
+and the process for submitting pull requests.
 
 ## Versioning
 
@@ -31,15 +67,15 @@ See [Semantic Versioning](https://semver.org/) for guidance.
 You can find the list of contributors in the [CONTRIBUTORS](CONTRIBUTORS.md)
 file.
 
-## License
+## Licence
 
 See the [LICENSE](LICENSE.txt) file.
 
-## CITING
+## Citing
 
 See the [CITATION](CITATION.cff) file.
 
 ## Support
 
 If you have any issues or suggestions concerning the scripts, please create a
-ticket in the [CESSDA Helpdesk](https://helpdesk.cessda.eu/#login).
+ticket in the [EOSC Beyond Helpdesk](https://helpdesk.sandbox.eosc-beyond.eu/#login).

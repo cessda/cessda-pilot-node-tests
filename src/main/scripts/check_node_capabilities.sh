@@ -4,9 +4,12 @@
 # Queries the Node Registry and checks availability of capabilities for all
 # registered nodes.
 #
-# Usage: ./check_endpoint_capabilities.sh <API_KEY> [format]
-#   format: text, json, or both (default: both)
-#   Example: ./check_endpoint_capabilities.sh myapikey json
+# Usage: ./check_node_capabilities.sh API_KEY [format] [dashboard_dir]
+#   format:        text, json, or both (default: both)
+#   dashboard_dir: Path to the dashboard data directory (optional)
+#                  Per-node output is written to <dashboard_dir>/<NODE_NAME>/
+#                  The registry summary is written to <dashboard_dir>/
+#                  Example: ./check_node_capabilities.sh myapikey json ../dashboard/data
 
 NODE_REGISTRY_URL="https://node-devel.eosc.grnet.gr/federation-backend/tenants/eosc-beyond/nodes"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -14,7 +17,7 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 # --- Validate API key argument ---
 if [ -z "$1" ]; then
     echo "Error: API_KEY is required."
-    echo "Usage: $0 <API_KEY> [text|json|both]"
+    echo "Usage: $0 API_KEY [text|json|both] [dashboard_dir]"
     exit 1
 fi
 
@@ -38,10 +41,22 @@ case "$FORMAT" in
         ;;
     *)
         echo "Invalid format: $FORMAT"
-        echo "Usage: $0 <API_KEY> [text|json|both]"
+        echo "Usage: $0 API_KEY [text|json|both] [dashboard_dir]"
         exit 1
         ;;
 esac
+
+# --- Optional dashboard data directory ---
+DASHBOARD_DIR="${3:-}"
+
+if [ -n "$DASHBOARD_DIR" ]; then
+    mkdir -p "$DASHBOARD_DIR" || { echo "Error: cannot create directory $DASHBOARD_DIR"; exit 1; }
+    SUMMARY_FILE_TXT="${DASHBOARD_DIR}/node_registry_summary.txt"
+    SUMMARY_FILE_JSON="${DASHBOARD_DIR}/node_registry_summary.json"
+else
+    SUMMARY_FILE_TXT="node_registry_summary_${TIMESTAMP}.txt"
+    SUMMARY_FILE_JSON="node_registry_summary_${TIMESTAMP}.json"
+fi
 
 # Colours for terminal output
 RED='\033[0;31m'
@@ -69,6 +84,35 @@ if [ $? -ne 0 ] || [ -z "$NODES_DATA" ]; then
     exit 1
 fi
 
+# Validate that the response is JSON before proceeding
+if ! echo "$NODES_DATA" | jq empty 2>/dev/null; then
+    echo -e "${RED}ERROR: Registry response is not valid JSON${NC}"
+    echo "Raw response received:"
+    echo "$NODES_DATA"
+    exit 1
+fi
+
+# The registry may return a bare array or a wrapped object.
+# Detect which and extract the array into NODES_ARRAY.
+RESPONSE_TYPE=$(echo "$NODES_DATA" | jq -r 'type')
+if [ "$RESPONSE_TYPE" = "array" ]; then
+    NODES_ARRAY="$NODES_DATA"
+elif [ "$RESPONSE_TYPE" = "object" ]; then
+    # Try common wrapper keys: "nodes", "results", "data"
+    NODES_ARRAY=$(echo "$NODES_DATA" | jq -r '(.nodes // .results // .data // .) | if type == "array" then . else error("no array found") end' 2>/dev/null)
+    if [ $? -ne 0 ] || [ -z "$NODES_ARRAY" ]; then
+        echo -e "${RED}ERROR: Registry returned a JSON object but no recognised array key (nodes/results/data) was found${NC}"
+        echo "Response (first 500 chars):"
+        echo "$NODES_DATA" | head -c 500
+        exit 1
+    fi
+else
+    echo -e "${RED}ERROR: Unexpected JSON type '$RESPONSE_TYPE' from registry${NC}"
+    echo "Response (first 500 chars):"
+    echo "$NODES_DATA" | head -c 500
+    exit 1
+fi
+
 echo "Node registry data retrieved successfully!"
 echo ""
 
@@ -83,9 +127,6 @@ else
 fi
 
 # Create summary report files
-SUMMARY_FILE_TXT="node_registry_summary_${TIMESTAMP}.txt"
-SUMMARY_FILE_JSON="node_registry_summary_${TIMESTAMP}.json"
-
 if [ "$GENERATE_TEXT" = true ]; then
     {
         echo "=========================================="
@@ -123,10 +164,22 @@ check_node_capabilities() {
     local NODE_LOGO="$5"
     local LEGAL_ENTITY_NAME="$6"
     local LEGAL_ENTITY_ROR="$7"
-    
+
     local SAFE_NODE_NAME=$(sanitize_name "$NODE_NAME")
-    local NODE_REPORT_TXT="endpoint_report_${SAFE_NODE_NAME}_${TIMESTAMP}.txt"
-    local NODE_REPORT_JSON="endpoint_report_${SAFE_NODE_NAME}_${TIMESTAMP}.json"
+
+    # Use canonical dashboard paths when DASHBOARD_DIR is set,
+    # otherwise fall back to timestamped local files
+    local NODE_REPORT_TXT
+    local NODE_REPORT_JSON
+    if [ -n "$DASHBOARD_DIR" ]; then
+        local NODE_OUTPUT_DIR="${DASHBOARD_DIR}/${NODE_NAME}"
+        mkdir -p "$NODE_OUTPUT_DIR" || { echo "Error: cannot create $NODE_OUTPUT_DIR"; return 1; }
+        NODE_REPORT_TXT="${NODE_OUTPUT_DIR}/endpoint_report.txt"
+        NODE_REPORT_JSON="${NODE_OUTPUT_DIR}/endpoint_report.json"
+    else
+        NODE_REPORT_TXT="endpoint_report_${SAFE_NODE_NAME}_${TIMESTAMP}.txt"
+        NODE_REPORT_JSON="endpoint_report_${SAFE_NODE_NAME}_${TIMESTAMP}.json"
+    fi
     
     echo -e "${BLUE}========================================${NC}"
     echo -e "${CYAN}Node: ${NODE_NAME}${NC}"
@@ -421,30 +474,30 @@ fi
 
 if [ "$USE_JQ" = true ]; then
     # Process each node using jq
-    NODE_COUNT=$(echo "$NODES_DATA" | jq 'length')
-    
+    NODE_COUNT=$(echo "$NODES_ARRAY" | jq 'length')
+
     for i in $(seq 0 $((NODE_COUNT - 1))); do
-        NODE_NAME=$(echo "$NODES_DATA" | jq -r ".[$i].name")
-        NODE_ID=$(echo "$NODES_DATA" | jq -r ".[$i].id")
-        NODE_PID=$(echo "$NODES_DATA" | jq -r ".[$i].pid")
-        NODE_ENDPOINT=$(echo "$NODES_DATA" | jq -r ".[$i].node_endpoint")
-        NODE_LOGO=$(echo "$NODES_DATA" | jq -r ".[$i].logo")
-        LEGAL_ENTITY_NAME=$(echo "$NODES_DATA" | jq -r ".[$i].legal_entity.name")
-        LEGAL_ENTITY_ROR=$(echo "$NODES_DATA" | jq -r ".[$i].legal_entity.ror_id")
-        
+        NODE_NAME=$(echo "$NODES_ARRAY" | jq -r ".[$i].name")
+        NODE_ID=$(echo "$NODES_ARRAY" | jq -r ".[$i].id")
+        NODE_PID=$(echo "$NODES_ARRAY" | jq -r ".[$i].pid")
+        NODE_ENDPOINT=$(echo "$NODES_ARRAY" | jq -r ".[$i].node_endpoint")
+        NODE_LOGO=$(echo "$NODES_ARRAY" | jq -r ".[$i].logo")
+        LEGAL_ENTITY_NAME=$(echo "$NODES_ARRAY" | jq -r ".[$i].legal_entity.name")
+        LEGAL_ENTITY_ROR=$(echo "$NODES_ARRAY" | jq -r ".[$i].legal_entity.ror_id")
+
         check_node_capabilities "$NODE_NAME" "$NODE_ID" "$NODE_PID" "$NODE_ENDPOINT" "$NODE_LOGO" "$LEGAL_ENTITY_NAME" "$LEGAL_ENTITY_ROR"
     done
-    
+
     # Build final summary JSON from temp file
     if [ "$GENERATE_JSON" = true ] && [ -f "$SUMMARY_TEMP" ] && [ -s "$SUMMARY_TEMP" ]; then
         # Remove trailing comma from last entry
         sed -i '$ d' "$SUMMARY_TEMP" 2>/dev/null || sed -i.bak '$ d' "$SUMMARY_TEMP"
-        
+
         # Build JSON array
         JSON_ARRAY="["
         JSON_ARRAY="${JSON_ARRAY}$(cat "$SUMMARY_TEMP")"
         JSON_ARRAY="${JSON_ARRAY}]"
-        
+
         cat > "$SUMMARY_FILE_JSON" <<EOF
 {
   "generated": "$(date -Iseconds)",
@@ -454,17 +507,17 @@ if [ "$USE_JQ" = true ]; then
 EOF
         rm -f "$SUMMARY_TEMP" "${SUMMARY_TEMP}.bak"
     fi
-    
+
 else
     # Fallback: manual parsing
-    echo "$NODES_DATA" | grep -o '"name":"[^"]*"' | sed 's/"name":"\([^"]*\)"/\1/' | while read -r NODE_NAME; do
+    echo "$NODES_ARRAY" | grep -o '"name":"[^"]*"' | sed 's/"name":"\([^"]*\)"/\1/' | while read -r NODE_NAME; do
         # Extract corresponding data (basic parsing - may be fragile)
-        NODE_BLOCK=$(echo "$NODES_DATA" | grep -A 10 "\"name\":\"$NODE_NAME\"")
+        NODE_BLOCK=$(echo "$NODES_ARRAY" | grep -A 10 "\"name\":\"$NODE_NAME\"")
         NODE_ID=$(echo "$NODE_BLOCK" | grep -o '"id":"[^"]*"' | head -1 | sed 's/"id":"\([^"]*\)"/\1/')
         NODE_PID=$(echo "$NODE_BLOCK" | grep -o '"pid":"[^"]*"' | head -1 | sed 's/"pid":"\([^"]*\)"/\1/')
         NODE_ENDPOINT=$(echo "$NODE_BLOCK" | grep -o '"node_endpoint":"[^"]*"' | sed 's/"node_endpoint":"\([^"]*\)"/\1/')
         NODE_LOGO=$(echo "$NODE_BLOCK" | grep -o '"logo":"[^"]*"' | sed 's/"logo":"\([^"]*\)"/\1/')
-        
+
         check_node_capabilities "$NODE_NAME" "$NODE_ID" "$NODE_PID" "$NODE_ENDPOINT" "$NODE_LOGO" "N/A" "N/A"
     done
     
