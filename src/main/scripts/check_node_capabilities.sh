@@ -47,7 +47,7 @@ case "$FORMAT" in
 esac
 
 # --- Optional dashboard data directory ---
-DASHBOARD_DIR="${3:-}"
+DASHBOARD_DIR="${3:-../dashboard/data}"
 
 if [ -n "$DASHBOARD_DIR" ]; then
     mkdir -p "$DASHBOARD_DIR" || { echo "Error: cannot create directory $DASHBOARD_DIR"; exit 1; }

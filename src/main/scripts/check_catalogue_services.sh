@@ -54,7 +54,7 @@ esac
 QUANTITY="${3:-10}"
 
 # Optional dashboard data directory; output goes to <DASHBOARD_DIR>/<NODE_NAME>/
-DASHBOARD_DIR="${4:-../../dashboard/data}"
+DASHBOARD_DIR="${4:-../dashboard/data}"
 
 if [ -n "$DASHBOARD_DIR" ]; then
     OUTPUT_DIR="${DASHBOARD_DIR}/${NODE_NAME}"

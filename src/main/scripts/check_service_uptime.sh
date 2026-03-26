@@ -67,7 +67,7 @@ NODE_NAME="${1:-}"
 API_KEY="${2:-}"
 START_DATE="${3:-}"
 END_DATE="${4:-}"
-DASHBOARD_DIR="${5:-../../dashboard/data}"
+DASHBOARD_DIR="${5:-../dashboard/data}"
 
 if [ -z "$NODE_NAME" ]; then
     echo -e "${RED}Error: NODE_NAME is required${NC}" >&2
