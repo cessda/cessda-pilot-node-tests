@@ -869,7 +869,7 @@ async function loadNode(nodeName) {
   document.getElementById('bc-node').textContent = nodeName;
   document.title = `${nodeName} — EOSC Beyond Node Dashboard`;
 
-  const base = `data/${encodeURIComponent(nodeName)}/`;
+  const base = `/api/data/${encodeURIComponent(nodeName)}/`;
   // Fetch primary files; for panels with a fallback, try that if primary is absent
   const fetches = await Promise.all(PANELS.map(async p => {
     const primary = await tryFetch(base + p.file);
@@ -988,7 +988,7 @@ async function init() {
 
   let registry;
   try {
-    const r = await tryFetch('data/node_registry_summary.json');
+    const r = await tryFetch('/api/data/node_registry_summary.json');
     if (!r) throw new Error('Registry not found');
     registry = await r.json();
   } catch (e) {

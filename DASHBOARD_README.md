@@ -27,7 +27,7 @@ src/main/dashboard/
 ## Naming Conventions
 
 | File | Description |
-|---|---|
+| ----------------------------- | ----------------------------------------------------------------- |
 | `node_registry_summary.json` | Central registry — fixed name, always at `data/` root |
 | `endpoint_report.json` | Endpoint capability report (from `check_node_capabilities.sh`) |
 | `catalogue_services_report.json` | Catalogue services report (from `check_catalogue_services.sh`) |
@@ -49,7 +49,7 @@ Node folder names must exactly match the `name` field in `node_registry_summary.
 }
 ```
 
-2. Create `data/MY-NODE/` and place any available reports inside.
+1. Create `data/MY-NODE/` and place any available reports inside.
    Reports that are absent are handled gracefully — the panel shows "No report file found".
 
 ## Updating Report Data
@@ -68,28 +68,34 @@ filename, so no manual file copying or renaming is needed. For example, from
 
 ## Running Locally
 
-Browsers block `fetch()` requests when HTML files are opened directly from
-disk (`file://` URLs). If you open `index.html` directly, both pages will
-display a clear error message explaining this. The dashboard must be served
-over HTTP.
-
-Run any one of the following commands from the `src/main/dashboard/` directory,
-then open the URL shown in your browser.
-
 ```bash
-# Node.js (default port 3000)
-npx serve .
+mvn spring-boot:run
+
+OR
+
+java -jar target/pilot-node-dashboard-1.0.0-SNAPSHOT.jar
 ```
 
-```bash
-# Python 3 (no additional dependencies)
-python3 -m http.server 8080
+## Running in the cloud
+
+Kubernetes CronJobs. If the app runs in Kubernetes, define three CronJob resources.
+Each job runs a small container (Alpine + bash + jq + curl) that executes one
+script and writes the output to a shared PersistentVolumeClaim mounted by both the
+job pod and the dashboard pod:
+
+```text
+PersistentVolumeClaim (ReadWriteMany)
+    ├── mounted at /data/dashboard in the Spring Boot pod  (reads)
+    └── mounted at /data/dashboard in each CronJob pod     (writes)
 ```
 
-```bash
-# PHP
-php -S localhost:8080
-```
+The Spring Boot property becomes dashboard.data-dir=/data/dashboard.
+
+### Where the JSON files live in each approach
+
+Approach, JSON file location, Spring Boot configuration
+Local development, src/main/dashboard/data/, dashboard.data-dir=src/main/dashboard/data
+Kubernetes + PVC, /data/dashboard/ in pod, DASHBOARD_DATA_DIR=/data/dashboard
 
 ## Navigation
 

@@ -1,7 +1,7 @@
 # Pilot Node Tests
 
 This repository contains the scripts for testing some of the functionality of
-an EOSC Beyond Pilot Node.
+an EOSC Beyond Pilot Node and a dashboard to display the outputs.
 
 See [METRICS](METRICS.md) for details of which script to use for which metric.
 
@@ -12,6 +12,7 @@ cessda-pilot-node-tests/
 ├── CHECK_CATALOGUE_SERVICES.md
 ├── CHECK_NODE_CAPABILITIES.md
 ├── CHECK_SERVICE_UPTIME.md
+├── DASHBOARD_README.md
 ├── README.md
 ├── METRICS.md
 ├── CONTRIBUTING.md
@@ -20,15 +21,10 @@ cessda-pilot-node-tests/
 ├── CITATION.cff
 └── src/
     └── main/
-        ├── scripts/
-        │   ├── check_node_capabilities.sh
-        │   ├── check_catalogue_services.sh
-        │   └── check_service_uptime.sh
         └── dashboard/
             ├── index.html
             ├── node.html
             ├── logo-eosc-beyond-horizontal-fc.png
-            ├── README.md
             └── data/
                 ├── node_registry_summary.json
                 ├── CESSDA/
@@ -37,6 +33,21 @@ cessda-pilot-node-tests/
                 │   └── argo_uptime_report.json
                 ├── EOSC-Beyond/
                 └── NI4OS-EUROPE/
+        ├── java/eu/cessda/pilotnode/
+           ├── PilotNodeDashboardApplication.java
+           ├── DashboardController.java
+           └── WebMvcConfig.java
+        ├── resources/
+            ├── application.properties
+            └── static/
+                ├── index.html
+                ├── node.html
+                └── logo-eosc-beyond-horizontal-fc.png
+        ├── scripts/
+        │   ├── check_node_capabilities.sh
+        │   ├── check_catalogue_services.sh
+        │   └── check_service_uptime.sh
+ 
 ```
 
 Report files in `src/main/dashboard/data/` use canonical names (no timestamp,

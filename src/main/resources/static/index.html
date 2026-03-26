@@ -525,7 +525,7 @@ async function tryFetch(url) {
 }
 
 async function loadRegistry() {
-  const r = await tryFetch('data/node_registry_summary.json');
+  const r = await tryFetch('/api/data/node_registry_summary.json');
   if (!r) throw new Error('Could not load node_registry_summary.json');
   return r.json();
 }
@@ -533,10 +533,10 @@ async function loadRegistry() {
 async function probeReports(nodeName) {
   const results = {};
   await Promise.all(REPORT_TYPES.map(async rt => {
-    const primary = await tryFetch(`data/${encodeURIComponent(nodeName)}/${rt.file}`);
+    const primary = await tryFetch(`/api/data/${encodeURIComponent(nodeName)}/${rt.file}`);
     if (primary) { results[rt.key] = true; return; }
     if (rt.fileFallback) {
-      const fallback = await tryFetch(`data/${encodeURIComponent(nodeName)}/${rt.fileFallback}`);
+      const fallback = await tryFetch(`/api/data/${encodeURIComponent(nodeName)}/${rt.fileFallback}`);
       results[rt.key] = !!fallback;
     } else {
       results[rt.key] = false;
