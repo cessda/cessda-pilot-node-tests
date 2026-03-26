@@ -1,29 +1,5 @@
 # EOSC Pilot Node Dashboard
 
-## File Structure
-
-```text
-src/main/dashboard/
-├── index.html                              ← Landing page (all-nodes summary)
-├── node.html                               ← Node detail page (shared, URL-driven)
-├── logo-eosc-beyond-horizontal-fc.png      ← EOSC Beyond logo
-├── README.md
-└── data/
-    ├── node_registry_summary.json          ← Master registry: drives node list & switcher
-    ├── CESSDA/
-    │   ├── endpoint_report.json
-    │   ├── catalogue_services_report.json
-    │   └── argo_uptime_report.json
-    ├── EOSC-Beyond/
-    │   ├── endpoint_report.json
-    │   ├── catalogue_services_report.json
-    │   └── argo_uptime_report.json
-    └── NI4OS-EUROPE/
-        ├── endpoint_report.json
-        ├── catalogue_services_report.json
-        └── argo_uptime_report.json
-```
-
 ## Naming Conventions
 
 | File | Description |
@@ -37,20 +13,14 @@ Node folder names must exactly match the `name` field in `node_registry_summary.
 
 ## Adding a New Node
 
-1. Add an entry to `data/node_registry_summary.json`:
-
-```json
-{
-  "name": "MY-NODE",
-  "endpoint": "https://...",
-  "total_capabilities": 0,
-  "available_capabilities": 0,
-  "report_file": "endpoint_report.json"
-}
-```
-
-1. Create `data/MY-NODE/` and place any available reports inside.
-   Reports that are absent are handled gracefully — the panel shows "No report file found".
+When a new node has been added to the
+[EOSC Node Registry](https://node-devel.eosc.grnet.gr/federation/eosc-beyond/home)
+run `check_node_capabilities.sh` and it will appear in `node_registry_summary.json`.
+A new directory (`data/NEW_NODE_NAME/`) is created and the `endpoint_report.json`
+report is placed inside. Run `catalogue_services_report.json` and
+`argo_uptime_report.json` against `NEW_NODE_NAME` and the generated reports will
+be place in the same directory. Reports that are absent are handled gracefully:
+the panel shows "No report file found".
 
 ## Updating Report Data
 
@@ -76,26 +46,7 @@ OR
 java -jar target/pilot-node-dashboard-1.0.0-SNAPSHOT.jar
 ```
 
-## Running in the cloud
-
-Kubernetes CronJobs. If the app runs in Kubernetes, define three CronJob resources.
-Each job runs a small container (Alpine + bash + jq + curl) that executes one
-script and writes the output to a shared PersistentVolumeClaim mounted by both the
-job pod and the dashboard pod:
-
-```text
-PersistentVolumeClaim (ReadWriteMany)
-    ├── mounted at /data/dashboard in the Spring Boot pod  (reads)
-    └── mounted at /data/dashboard in each CronJob pod     (writes)
-```
-
-The Spring Boot property becomes dashboard.data-dir=/data/dashboard.
-
-### Where the JSON files live in each approach
-
-Approach, JSON file location, Spring Boot configuration
-Local development, src/main/dashboard/data/, dashboard.data-dir=src/main/dashboard/data
-Kubernetes + PVC, /data/dashboard/ in pod, DASHBOARD_DATA_DIR=/data/dashboard
+Then view the dashboard at `http://localhost:8080/index.html`.
 
 ## Navigation
 

@@ -12,13 +12,15 @@ cessda-pilot-node-tests/
 ├── CHECK_CATALOGUE_SERVICES.md
 ├── CHECK_NODE_CAPABILITIES.md
 ├── CHECK_SERVICE_UPTIME.md
-├── DASHBOARD_README.md
-├── README.md
-├── METRICS.md
+├── CITATION.cff
+├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── CONTRIBUTORS.md
+├── DASHBOARD_README.md
 ├── LICENSE.txt
-├── CITATION.cff
+├── METRICS.md
+├── pom.xml
+├── README.md
 └── src/
     └── main/
         └── dashboard/
@@ -27,12 +29,12 @@ cessda-pilot-node-tests/
             ├── logo-eosc-beyond-horizontal-fc.png
             └── data/
                 ├── node_registry_summary.json
-                ├── CESSDA/
+                ├── <NODE_NAME_1>/
                 │   ├── endpoint_report.json
                 │   ├── catalogue_services_report.json
                 │   └── argo_uptime_report.json
-                ├── EOSC-Beyond/
-                └── NI4OS-EUROPE/
+                ├── <NODE_NAME_2>/
+                └── <NODE_NAME_N>/
         ├── java/eu/cessda/pilotnode/
            ├── PilotNodeDashboardApplication.java
            ├── DashboardController.java
@@ -90,3 +92,26 @@ See the [CITATION](CITATION.cff) file.
 
 If you have any issues or suggestions concerning the scripts, please create a
 ticket in the [EOSC Beyond Helpdesk](https://helpdesk.sandbox.eosc-beyond.eu/#login).
+
+## TODO
+
+Running the scripts from `cessda-pilot-node-tests/src/main/scripts` directory
+works fine when running the application locally. If the app runs in Kubernetes,
+define three CronJob resources.Each job runs a small container
+(Alpine + bash + jq + curl) that executes one script and writes the output to a
+shared PersistentVolumeClaim mounted by both the job pod and the dashboard pod:
+
+```text
+PersistentVolumeClaim (ReadWriteMany)
+    ├── mounted at /data/dashboard in the Spring Boot pod  (reads)
+    └── mounted at /data/dashboard in each CronJob pod     (writes)
+```
+
+The Spring Boot property becomes `dashboard.data-dir=/data/dashboard`.
+
+### Where the JSON files live in each approach
+
+| Approach | JSON file location | Spring Boot configuration |
+| ---------- | -------- | ------- |
+| Local development | src/main/dashboard/data/ | dashboard.data-dir=src/main/dashboard/data |
+| Kubernetes + PVC | /data/dashboard/ in pod | DASHBOARD_DATA_DIR=/data/dashboard |
