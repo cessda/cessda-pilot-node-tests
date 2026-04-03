@@ -8,6 +8,33 @@ See [METRICS](METRICS.md) for details of which script to use for which metric.
 ## Repository Structure
 
 ```text
+src/main/java/eu/cessda/pilotnode/
+├── PilotNodeDashboardApplication.java   ← @EnableScheduling, @EnableConfigurationProperties
+├── DashboardDataController.java         ← serves /api/data/** (unchanged)
+├── WebMvcConfig.java                    ← static resource config (unchanged)
+├── config/
+│   └── CollectorProperties.java        ← typed @ConfigurationProperties binding
+├── collector/
+│   ├── CollectorException.java         ← unchecked exception for API failures
+│   ├── NodeCapabilitiesCollector.java  ← replaces check_node_capabilities.sh
+│   ├── ExchangeServicesCollector.java  ← replaces check_exchange_services.sh
+│   └── ArgoUptimeCollector.java        ← replaces check_service_uptime.sh
+└── model/
+    ├── LegalEntity.java
+    ├── NodeRegistryEntry.java          ← registry API response element
+    ├── Capability.java
+    ├── EndpointReport.java             ← → endpoint_report.json
+    ├── NodeSummary.java
+    ├── NodeRegistrySummary.java        ← → node_registry_summary.json
+    ├── CatalogueService.java
+    ├── CatalogueServicesReport.java    ← → catalogue_services_report.json
+    ├── ArgoPeriod.java
+    ├── ArgoEndpoint.java
+    └── ArgoUptimeReport.java           ← → argo_uptime_report.json
+
+
+
+
 cessda-pilot-node-tests/
 ├── CHECK_CATALOGUE_SERVICES.md
 ├── CHECK_NODE_CAPABILITIES.md

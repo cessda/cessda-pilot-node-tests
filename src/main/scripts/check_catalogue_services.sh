@@ -28,7 +28,7 @@ fi
 NODE_NAME="$1"
 
 # Parse format argument (second argument)
-FORMAT="${2:-both}"
+FORMAT="${2:-json}"
 
 case "$FORMAT" in
     text|txt)

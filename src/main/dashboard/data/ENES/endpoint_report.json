@@ -1,0 +1,36 @@
+{
+  "generated": "2026-04-02T16:27:21+01:00",
+  "node_name": "ENES",
+  "node_id": "7",
+  "node_pid": "21.T15999/ENES",
+  "node_endpoint": "https://enes-node-endpoint.pilot.eosc-beyond.eu/api/endpoint",
+  "legal_entity": {
+    "name": "null",
+    "ror_id": "null"
+  },
+  "total_capabilities": 3,
+  "available_capabilities": 3,
+  "capabilities": [
+  {
+    "capability_type": "AAI",
+    "endpoint": "https://enes-proxy.pilot.eosc-beyond.eu/",
+    "version": "1.0.0",
+    "status": "Available",
+    "http_code": "302"
+  },
+  {
+    "capability_type": "Helpdesk",
+    "endpoint": "https://helpdesk.eneslab.pilot.eosc-beyond.eu/",
+    "version": "1.0.0",
+    "status": "Available",
+    "http_code": "200"
+  },
+  {
+    "capability_type": "PID",
+    "endpoint": "http://pidhs.disi.unitn.it:8000",
+    "version": "1.0.0",
+    "status": "Available",
+    "http_code": "200"
+  }
+]
+}

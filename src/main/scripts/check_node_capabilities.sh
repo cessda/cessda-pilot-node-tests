@@ -24,7 +24,7 @@ fi
 API_KEY="$1"
 
 # --- Parse optional format argument ---
-FORMAT="${2:-both}"
+FORMAT="${2:-json}"
 
 case "$FORMAT" in
     text|txt)
