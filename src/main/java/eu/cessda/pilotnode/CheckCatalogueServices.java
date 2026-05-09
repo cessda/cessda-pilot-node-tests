@@ -28,6 +28,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,6 +53,8 @@ public class CheckCatalogueServices {
     // private static final String API_BASE_URL = "https://providers.sandbox.eosc-beyond.eu/api/service/all";
     private static final String API_BASE_URL = "https://service-catalogue-staging.beyond.cessda.eu/api/service/all";
 
+    private static final Logger log = Logger.getLogger(CheckCatalogueServices.class.getName());
+
     // ANSI colour codes
     private static final String RED    = "\033[0;31m";
     private static final String GREEN  = "\033[0;32m";
@@ -63,9 +66,9 @@ public class CheckCatalogueServices {
 
         // ── Argument parsing ──────────────────────────────────────────────────
         if (args.length < 1) {
-            System.err.println("Error: NODE_NAME is required");
-            System.err.println("Usage: java CheckCatalogueServices NODE_NAME [quantity] [dashboard_dir]");
-            System.exit(1);
+            log.warning("Error: NODE_NAME is required");
+            log.warning("Usage: java CheckCatalogueServices NODE_NAME [quantity] [dashboard_dir]");
+            throw new RuntimeException("Failed to fetch Catalogue Services data");
         }
 
         String nodeName     = args[0];
@@ -83,17 +86,15 @@ public class CheckCatalogueServices {
 
         // ── Header ────────────────────────────────────────────────────────────
         separator();
-        System.out.println("Service Catalogue Resource Availability Report");
+        log.info("Service Catalogue Resource Availability Report");
         separator();
-        System.out.println("Generated : " + Instant.now());
-        System.out.println("Node Name : " + nodeName);
-        System.out.println("API Source: " + apiUrl);
+        log.info("Generated : " + Instant.now());
+        log.info("Node Name : " + nodeName);
+        log.info("API Source: " + apiUrl);
         separator();
-        System.out.println();
 
         // ── Fetch data ────────────────────────────────────────────────────────
-        System.out.println(BLUE + "Fetching service data from API..." + NC);
-        System.out.println();
+        log.info(BLUE + "Fetching service data from API..." + NC);
 
         HttpClient httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(15))
@@ -110,25 +111,24 @@ public class CheckCatalogueServices {
         try {
             apiResponse = httpClient.send(apiRequest, HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {
-            System.err.println(RED + "ERROR: HTTP request failed: " + e.getMessage() + NC);
-            System.err.println("Please check network connectivity and API endpoint accessibility.");
-            System.exit(1);
-            return;
+            log.warning(RED + "ERROR: HTTP request failed: " + e.getMessage() + NC);
+            log.warning("Please check network connectivity and API endpoint accessibility.");
+            throw new RuntimeException("Failed to fetch Catalogue Services data");
         }
 
         String jsonData = apiResponse.body();
 
         if (jsonData == null || jsonData.isBlank()) {
-            System.err.println(RED + "ERROR: No data received from API (HTTP " + apiResponse.statusCode() + ")" + NC);
-            System.exit(1);
+            log.warning(RED + "ERROR: No data received from API (HTTP " + apiResponse.statusCode() + ")" + NC);
+            throw new RuntimeException("Failed to fetch Catalogue Services data");
         }
 
-        System.out.println("Data retrieved successfully! (HTTP " + apiResponse.statusCode() + ")");
-        System.out.println();
-        System.out.println("=== JSON RESPONSE (first 500 characters) ===");
-        System.out.println(jsonData.substring(0, Math.min(500, jsonData.length())));
-        System.out.println("============================================");
-        System.out.println();
+        log.info("Data retrieved successfully! (HTTP " + apiResponse.statusCode() + ")");
+        
+        log.info("=== JSON RESPONSE (first 500 characters) ===");
+        log.info(jsonData.substring(0, Math.min(500, jsonData.length())));
+        log.info("============================================");
+        
 
         // ── Parse JSON ────────────────────────────────────────────────────────
         ObjectMapper mapper = new ObjectMapper();
@@ -136,31 +136,30 @@ public class CheckCatalogueServices {
         try {
             root = mapper.readTree(jsonData);
         } catch (IOException e) {
-            System.err.println(RED + "ERROR: Response is not valid JSON: " + e.getMessage() + NC);
-            System.exit(1);
-            return;
+            log.warning(RED + "ERROR: Response is not valid JSON: " + e.getMessage() + NC);
+            throw new RuntimeException("Failed to fetch Catalogue Services data");
         }
 
         if (root.has("error")) {
-            System.out.println(YELLOW + "WARNING: API response contains an 'error' field." + NC);
+            log.info(YELLOW + "WARNING: API response contains an 'error' field." + NC);
         }
 
         long total = root.path("total").asLong(0);
-        System.out.println("Total services found: " + total);
-        System.out.println();
+        log.info("Total services found: " + total);
+        
 
         // ── Check each service webpage ────────────────────────────────────────
-        System.out.println("Checking service webpages...");
-        System.out.println();
+        log.info("Checking service webpages...");
+        
 
         JsonNode results = root.path("results");
         List<ObjectNode> serviceResults = new ArrayList<>();
 
         for (JsonNode service : results) {
-            String name         = service.path("name").asText("(unknown)");
+            String name         = service.path("name").asText();
             String webpage      = service.path("webpage").isMissingNode() || service.path("webpage").isNull()
                                       ? null : service.path("webpage").asText().trim();
-            String serviceId    = service.path("id").asText("NO_ID");
+            String serviceId    = service.path("id").asText();
             String abbreviation = service.path("abbreviation").isMissingNode() || service.path("abbreviation").isNull()
                                       ? null : service.path("abbreviation").asText();
 
@@ -222,10 +221,10 @@ public class CheckCatalogueServices {
         Files.writeString(reportFileJson, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(report));
 
         // ── Footer ────────────────────────────────────────────────────────────
-        System.out.println();
+        
         separator();
-        System.out.println("Report generated:");
-        System.out.println("  JSON: " + reportFileJson.toAbsolutePath());
+        log.info("Report generated:");
+        log.info("  JSON: " + reportFileJson.toAbsolutePath());
         separator();
     }
 
@@ -250,6 +249,6 @@ public class CheckCatalogueServices {
     }
 
     private static void separator() {
-        System.out.println("======================================");
+        log.info("======================================");
     }
 }

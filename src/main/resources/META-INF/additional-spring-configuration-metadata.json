@@ -1,0 +1,20 @@
+{"properties": [{
+  "name": "check.api-key-argo",
+  "type": "java.lang.String",
+  "description": "A description for 'check.api-key-argo'"
+},
+{
+  "name": "check.api-key-node",
+  "type": "java.lang.String",
+  "description": "A description for 'check.api-key-argo'"
+},
+{
+  "name": "check.node-name",
+  "type": "java.lang.String",
+  "description": "A description for 'check.node-name'"
+},
+{
+  "name": "dashboard.data-dir",
+  "type": "java.lang.String",
+  "description": "A description for 'dashboard.data-dir'"
+}]}

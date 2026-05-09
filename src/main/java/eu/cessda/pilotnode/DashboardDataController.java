@@ -20,9 +20,8 @@ package eu.cessda.pilotnode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
@@ -48,14 +47,14 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api/data")
 public class DashboardDataController {
 
-    private static final Logger log = LoggerFactory.getLogger(DashboardDataController.class);
+    private static final Logger log = Logger.getLogger(DashboardDataController.class.getName());
 
     private final Path dataDir;
 
     public DashboardDataController(
             @Value("${dashboard.data-dir}") String dataDirPath) {
         this.dataDir = Paths.get(dataDirPath).toAbsolutePath().normalize();
-        log.info("Dashboard data directory: {}", this.dataDir);
+        log.info("Dashboard data directory:  " + this.dataDir);
     }
 
     /**
@@ -80,16 +79,16 @@ public class DashboardDataController {
         // Resolve and normalise — prevents path traversal (e.g. ../../etc/passwd)
         Path resolved = dataDir.resolve(relativePath).normalize();
         if (!resolved.startsWith(dataDir)) {
-            log.warn("Blocked path traversal attempt: {}", relativePath);
+            log.warning("Blocked path traversal attempt:  " + relativePath);
             return ResponseEntity.badRequest().build();
         }
 
         if (!Files.exists(resolved) || !Files.isRegularFile(resolved)) {
-            log.debug("Data file not found: {}", resolved);
+            log.info("Data file not found: " + resolved);
             return ResponseEntity.notFound().build();
         }
 
-        log.debug("Serving data file: {}", resolved);
+        log.info("Serving data file:  " + resolved);
         return ResponseEntity.ok(new PathResource(resolved));
     }
 }
