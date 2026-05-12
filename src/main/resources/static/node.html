@@ -23,8 +23,60 @@
   body { background: var(--grey-100); color: var(--black); font-family: var(--sans); min-height: 100vh; }
 
   /* ── Topbar ── */
-  .topbar { background: var(--black); padding: 0 2rem; height: 48px; display: flex; align-items: center; }
+  .topbar {
+    background: var(--black); padding: 0 2rem; height: 48px;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
   .topbar-logo { height: 26px; width: auto; display: block; }
+
+  /* ── Node switcher ── */
+  .node-switcher { position: relative; }
+
+  .ns-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.1); color: var(--white);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0 0.85rem; height: 30px;
+    font-family: var(--mono); font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.15s; white-space: nowrap;
+  }
+  .ns-btn:hover { background: rgba(255,255,255,0.2); }
+  .ns-btn svg { width: 9px; height: 9px; transition: transform 0.2s; flex-shrink: 0; }
+  .node-switcher[aria-expanded="true"] .ns-btn { background: var(--orange); border-color: var(--orange); }
+  .node-switcher[aria-expanded="true"] .ns-btn svg { transform: rotate(180deg); }
+
+  .ns-dropdown {
+    display: none; position: absolute; top: calc(100% + 6px); right: 0;
+    min-width: 220px; max-height: 340px; overflow-y: auto;
+    background: var(--white); border: 1.5px solid var(--black);
+    z-index: 300; box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+  }
+  .node-switcher[aria-expanded="true"] .ns-dropdown { display: block; }
+
+  .ns-header {
+    font-family: var(--mono); font-size: 0.55rem; color: var(--grey-400);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 0.55rem 0.9rem 0.4rem; border-bottom: 1px solid var(--grey-200);
+    position: sticky; top: 0; background: var(--white); z-index: 1;
+  }
+
+  .ns-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--grey-200);
+    text-decoration: none; color: var(--black);
+    font-size: 0.82rem; font-weight: 500; transition: background 0.1s;
+  }
+  .ns-item:last-child { border-bottom: none; }
+  .ns-item:hover { background: var(--grey-100); }
+  .ns-item.current { background: var(--orange-lt); color: var(--orange); pointer-events: none; }
+  .ns-item.current .ns-check { display: block; }
+  .ns-check { display: none; margin-left: auto; font-size: 0.7rem; color: var(--orange); }
+
+  .ns-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--grey-400); }
+  .ns-dot.green { background: var(--green); }
+
+  .ns-loading { padding: 1rem 0.9rem; font-family: var(--mono); font-size: 0.65rem; color: var(--grey-400); }
 
   /* ── Header ── */
   header { border-bottom: 2px solid var(--black); background: var(--white); }
@@ -42,11 +94,8 @@
 
   /* ── Overview stat strip ── */
   .overview-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    border: 1px solid var(--grey-200);
-    background: var(--white);
-    margin-bottom: 1.5rem;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    border: 1px solid var(--grey-200); background: var(--white); margin-bottom: 1.5rem;
   }
   .ov-card { padding: 1.5rem; border-right: 1px solid var(--grey-200); }
   .ov-card:last-child { border-right: none; }
@@ -63,14 +112,13 @@
   .panel { border: 1px solid var(--grey-200); margin-bottom: 1.25rem; background: var(--white); }
   .panel-header {
     background: var(--grey-100); padding: 1rem 1.25rem;
-    font-weight: 700; text-transform: uppercase; font-size: 0.72rem;
-    letter-spacing: 0.08em;
+    font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.08em;
     display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
     border-bottom: 1px solid var(--grey-200);
   }
   .panel-header-left { display: flex; align-items: center; gap: 0.6rem; }
   .panel-icon { font-size: 0.9rem; }
-  .panel-body  { padding: 1.5rem; }
+  .panel-body { padding: 1.5rem; }
   .panel-missing {
     padding: 2rem 1.5rem; font-family: var(--mono); font-size: 0.72rem;
     color: var(--grey-400); text-align: center; border-top: 1px solid var(--grey-200);
@@ -125,6 +173,128 @@
 
   /* ── State messages ── */
   .state-msg { text-align: center; padding: 5rem; font-family: var(--mono); color: var(--grey-400); }
+
+  /* ── Run-checks menu (node page) ── */
+  .run-menu { position: relative; }
+
+  .run-menu-btn {
+    display: flex; align-items: center; gap: 0.45rem;
+    background: var(--orange); color: var(--white); border: none;
+    padding: 0 0.85rem; height: 30px;
+    font-family: var(--mono); font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.15s; white-space: nowrap;
+  }
+  .run-menu-btn:hover { background: var(--orange-dk); }
+  .run-menu-btn svg { width: 10px; height: 10px; transition: transform 0.2s; flex-shrink: 0; }
+  .run-menu[aria-expanded="true"] .run-menu-btn svg { transform: rotate(180deg); }
+
+  .run-dropdown {
+    display: none; position: absolute; top: calc(100% + 4px); right: 0;
+    min-width: 280px; background: var(--white); border: 1.5px solid var(--black);
+    z-index: 200; box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+  }
+  .run-menu[aria-expanded="true"] .run-dropdown { display: block; }
+
+  .run-dropdown-header {
+    font-family: var(--mono); font-size: 0.55rem; color: var(--grey-400);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 0.6rem 0.9rem 0.4rem; border-bottom: 1px solid var(--grey-200);
+  }
+
+  .run-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--grey-200);
+    gap: 1rem; cursor: default;
+  }
+  .run-item:last-child { border-bottom: none; }
+  .run-item-info { flex: 1; min-width: 0; }
+  .run-item-label { font-size: 0.78rem; font-weight: 600; color: var(--black); margin-bottom: 0.1rem; }
+  .run-item-desc  { font-family: var(--mono); font-size: 0.57rem; color: var(--grey-400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .run-btn {
+    background: var(--black); color: var(--white); border: none;
+    font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 0.3rem 0.65rem;
+    cursor: pointer; flex-shrink: 0; transition: background 0.15s; white-space: nowrap;
+  }
+  .run-btn:hover    { background: var(--orange); }
+  .run-btn:disabled { background: var(--grey-200); color: var(--grey-400); cursor: not-allowed; }
+
+  /* ── API key modal ── */
+  .apikey-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55); z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+  .apikey-overlay.open { display: flex; }
+
+  .apikey-modal {
+    background: var(--white); border: 2px solid var(--black);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+    padding: 2rem; width: 100%; max-width: 420px; position: relative;
+  }
+  .apikey-modal-title {
+    font-size: 0.85rem; font-weight: 700; letter-spacing: -0.01em;
+    margin-bottom: 0.35rem;
+  }
+  .apikey-modal-sub {
+    font-family: var(--mono); font-size: 0.6rem; color: var(--grey-600);
+    margin-bottom: 1.25rem; line-height: 1.6;
+  }
+  .apikey-modal-sub strong { color: var(--orange); }
+  .apikey-label {
+    font-family: var(--mono); font-size: 0.6rem; color: var(--grey-400);
+    text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.35rem;
+  }
+  .apikey-input {
+    width: 100%; border: 1.5px solid var(--grey-200); padding: 0.55rem 0.75rem;
+    font-family: var(--mono); font-size: 0.78rem; color: var(--black);
+    background: var(--grey-100); outline: none;
+    transition: border-color 0.15s;
+  }
+  .apikey-input:focus { border-color: var(--orange); background: var(--white); }
+  .apikey-actions {
+    display: flex; gap: 0.75rem; margin-top: 1.25rem; justify-content: flex-end;
+  }
+  .apikey-cancel {
+    background: none; border: 1.5px solid var(--grey-200); color: var(--grey-600);
+    font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 0.4rem 0.9rem; cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .apikey-cancel:hover { border-color: var(--grey-400); }
+  .apikey-confirm {
+    background: var(--black); border: none; color: var(--white);
+    font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 0.4rem 0.9rem; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .apikey-confirm:hover { background: var(--orange); }
+  .apikey-confirm:disabled { background: var(--grey-200); color: var(--grey-400); cursor: not-allowed; }
+
+  /* ── Toast (node page) ── */
+  #toast-container {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    z-index: 9999; pointer-events: none;
+  }
+  .toast {
+    font-family: var(--mono); font-size: 0.7rem; padding: 0.65rem 1rem;
+    border-left: 3px solid var(--orange); background: var(--white);
+    border-top: 1px solid var(--grey-200); border-right: 1px solid var(--grey-200); border-bottom: 1px solid var(--grey-200);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.08); max-width: 320px;
+    pointer-events: all; animation: toastIn 0.2s ease;
+    display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .toast.toast-ok  { border-left-color: var(--green); }
+  .toast.toast-err { border-left-color: var(--red); }
+  .toast-icon { font-size: 0.8rem; flex-shrink: 0; margin-top: 0.05rem; }
+  .toast-body { flex: 1; line-height: 1.5; color: var(--black); }
+  .toast-title { font-weight: 600; margin-bottom: 0.15rem; }
+  .toast-msg   { color: var(--grey-600); font-size: 0.63rem; }
+
+  @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
@@ -133,7 +303,68 @@
   <a href="index.html">
     <img src="logo-eosc-beyond-horizontal-fc.png" alt="EOSC Beyond" class="topbar-logo">
   </a>
+
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <!-- Run checks menu -->
+    <div class="run-menu" id="run-menu" aria-expanded="false">
+      <button class="run-menu-btn" aria-haspopup="true" aria-controls="run-dropdown" onclick="toggleRunMenu()">
+        Run checks
+        <svg viewBox="0 0 10 6" fill="currentColor" aria-hidden="true"><path d="M0 0l5 6 5-6z"/></svg>
+      </button>
+      <div class="run-dropdown" id="run-dropdown" role="menu">
+        <div class="run-dropdown-header">Node-specific checks</div>
+        <div class="run-item" role="menuitem">
+          <div class="run-item-info">
+            <div class="run-item-label">Catalogue Services</div>
+            <div class="run-item-desc">CheckCatalogueServices · catalogue_services_report.json</div>
+          </div>
+          <button class="run-btn" id="btn-catalogue-services" onclick="promptAndRun('catalogue-services')">Run</button>
+        </div>
+        <div class="run-item" role="menuitem">
+          <div class="run-item-info">
+            <div class="run-item-label">Service Uptime</div>
+            <div class="run-item-desc">CheckServiceUptime · argo_uptime_report.json</div>
+          </div>
+          <button class="run-btn" id="btn-service-uptime" onclick="promptAndRun('service-uptime')">Run</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node switcher -->
+    <div class="node-switcher" id="node-switcher" aria-expanded="false">
+      <button class="ns-btn" onclick="toggleSwitcher()" aria-haspopup="true" aria-controls="ns-dropdown">
+        Switch node
+        <svg viewBox="0 0 10 6" fill="currentColor" aria-hidden="true"><path d="M0 0l5 6 5-6z"/></svg>
+      </button>
+      <div class="ns-dropdown" id="ns-dropdown" role="menu">
+        <div class="ns-header">All nodes</div>
+        <div id="ns-list"><div class="ns-loading">Loading…</div></div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- API key modal -->
+<div class="apikey-overlay" id="apikey-overlay" role="dialog" aria-modal="true" aria-labelledby="apikey-title">
+  <div class="apikey-modal">
+    <div class="apikey-modal-title" id="apikey-title">API Key Required</div>
+    <div class="apikey-modal-sub">
+      Enter your API key to run <strong id="apikey-check-label">this check</strong> against
+      <strong id="apikey-node-label">the selected node</strong>.<br>
+      The key is used only for this request and is <strong>never saved or stored</strong>.
+    </div>
+    <label class="apikey-label" for="apikey-input">API Key</label>
+    <input class="apikey-input" id="apikey-input" type="password"
+           autocomplete="off" autocorrect="off" spellcheck="false"
+           placeholder="Paste your API key here…">
+    <div class="apikey-actions">
+      <button class="apikey-cancel" onclick="closeApiKeyModal()">Cancel</button>
+      <button class="apikey-confirm" id="apikey-confirm-btn" onclick="confirmApiKey()">Run check</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" aria-live="polite"></div>
 
 <header>
   <div class="header-inner">
@@ -193,14 +424,12 @@ function buildOverview(ep, cat, argo) {
 
   // Catalogue services
   if (cat) {
-    console.debug('[catalogue overview]', Object.keys(cat));
-    const total  = typeof cat.total_services === 'number' ? cat.total_services
-                 : Array.isArray(cat.services) ? cat.services.length : '—';
+    const total = typeof cat.total_services === 'number' ? cat.total_services
+                : Array.isArray(cat.services) ? cat.services.length : '—';
     let active = null;
-    if (typeof cat.active_services === 'number' && cat.active_services > 0) {
+    if (typeof cat.active_services === 'number') {
       active = cat.active_services;
     } else if (Array.isArray(cat.services) && cat.services.length > 0) {
-      console.debug('[catalogue overview] first service keys:', Object.keys(cat.services[0]));
       const first = cat.services[0];
       if (typeof first.status === 'string') {
         const activeVals = new Set(['active','Active','ACTIVE','available','Available','ok','OK','published','Published']);
@@ -225,9 +454,9 @@ function buildOverview(ep, cat, argo) {
     if (typeof argo.uptime_percentage === 'number') {
       uptime = Math.round(argo.uptime_percentage * 10) / 10;
     } else {
-      const _items = Array.isArray(argo.endpoints) ? argo.endpoints
-                   : Array.isArray(argo.services)  ? argo.services : [];
-      const vals = _items.map(s => s.uptime_percentage ?? s.average_availability ?? s.availability ?? null).filter(v => v !== null);
+      const items = Array.isArray(argo.endpoints) ? argo.endpoints
+                  : Array.isArray(argo.services)  ? argo.services : [];
+      const vals = items.map(s => s.uptime_percentage ?? s.average_availability ?? s.availability ?? null).filter(v => v !== null);
       if (vals.length) uptime = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
     }
     if (uptime !== null) {
@@ -299,12 +528,10 @@ function renderCataloguePanel(data) {
     </div>`;
   }
 
-  // Normalise to an array of service objects
   let services = [];
   if (Array.isArray(data.services)) {
     services = data.services;
   } else if (typeof data.total_services === 'number') {
-    // File exists but has no services array — show raw summary
     return `
       <div class="panel">
         <div class="panel-header">
@@ -325,12 +552,12 @@ function renderCataloguePanel(data) {
     </div>`;
   }
 
+  const activeVals = new Set(['active','Active','ACTIVE','available','Available','ok','OK','published','Published']);
   const rows = services.map(s => {
     const name   = s.name || s.title || s.id || '(unnamed)';
     const abbr   = s.abbreviation || null;
-    const url    = s.url  || s.webpage || s.endpoint || s.landing_page || null;
+    const url    = s.url || s.webpage || s.endpoint || s.landing_page || null;
     const status = s.status ?? (s.active === true ? 'active' : s.active === false ? 'inactive' : null);
-    const activeVals = new Set(['active','Active','ACTIVE','available','Available','ok','OK','published','Published']);
     const isActive = status !== null ? activeVals.has(status) : null;
     const statusBadge = status
       ? `<span class="badge ${isActive ? 'badge-ok' : 'badge-missing'}">${status}</span>`
@@ -369,21 +596,19 @@ function renderArgoPanel(data) {
     </div>`;
   }
 
-  // Normalise to array of { name, uptime_percentage }
+  // Normalise: 'endpoints' is the real key; 'services' kept as fallback
   let services = [];
   if (Array.isArray(data.endpoints)) {
-    services = data.endpoints;  // argo_uptime_report uses 'endpoints' as the array key
+    services = data.endpoints;
   } else if (Array.isArray(data.services)) {
     services = data.services;
   } else if (typeof data.uptime_percentage === 'number') {
-    // Top-level single uptime value
     services = [{ name: data.service_name || data.name || 'Overall', uptime_percentage: data.uptime_percentage }];
   }
 
-  // Header summary
   let avgUptime = null;
   if (services.length > 0) {
-    const vals = services.map(s => s.uptime_percentage ?? s.availability ?? null).filter(v => v !== null);
+    const vals = services.map(s => s.uptime_percentage ?? s.average_availability ?? s.availability ?? null).filter(v => v !== null);
     if (vals.length) avgUptime = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
   }
 
@@ -391,12 +616,30 @@ function renderArgoPanel(data) {
     ? `<span class="badge badge-${avgUptime >= 90 ? 'ok' : avgUptime >= 60 ? 'warn' : 'error'}">${avgUptime}% avg</span>`
     : `<span class="badge badge-missing">No uptime data</span>`;
 
+  // Extract report-level date range (used in both the normal and empty-services branches)
+  const reportStart = data.period?.start || data.start_date || data.start_time || data.period_start || data.from || null;
+  const reportEnd   = data.period?.end   || data.end_date   || data.end_time   || data.period_end   || data.to   || null;
+
+  function fmtDate(d) {
+    if (!d) return null;
+    // Already a nice string? Return as-is; otherwise try to parse
+    const parsed = new Date(d);
+    if (isNaN(parsed)) return String(d);
+    return parsed.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  const dateRange = (reportStart || reportEnd)
+    ? `<span class="argo-meta" style="display:inline-flex;align-items:center;gap:0.3rem;">
+         🗓 ${reportStart ? fmtDate(reportStart) : '?'}&nbsp;→&nbsp;${reportEnd ? fmtDate(reportEnd) : '?'}
+       </span>`
+    : '';
+
   if (services.length === 0) {
     return `
       <div class="panel">
         <div class="panel-header">
           <div class="panel-header-left"><span class="panel-icon">📡</span> ARGO Uptime Report</div>
-          ${headerBadge}
+          <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">${dateRange}${headerBadge}</div>
         </div>
         <div class="panel-body">
           <details><summary style="cursor:pointer;font-family:var(--mono);font-size:0.7rem;color:var(--grey-600);">Show raw JSON</summary>
@@ -406,11 +649,18 @@ function renderArgoPanel(data) {
   }
 
   const cards = services.map(s => {
-    const name   = s.name || s.service_name || s.id || '(unnamed)';
-    const pct    = s.uptime_percentage ?? s.average_availability ?? s.availability ?? null;
-    const cls    = pct !== null ? uptimeClass(pct) : 'low';
-    const width  = pct !== null ? pct : 0;
+    const name  = s.name || s.service_name || s.id || '(unnamed)';
+    const pct   = s.uptime_percentage ?? s.average_availability ?? s.availability ?? null;
+    const cls   = pct !== null ? uptimeClass(pct) : 'low';
+    const width = pct !== null ? pct : 0;
     const period = s.period || s.time_period || null;
+
+    // Per-service dates (fall back to report-level period)
+    const sStart = s.period?.start || s.start_date || s.start_time || s.period_start || s.from || reportStart || null;
+    const sEnd   = s.period?.end   || s.end_date   || s.end_time   || s.period_end   || s.to   || reportEnd   || null;
+    const sDateRange = (sStart || sEnd)
+      ? `<div class="argo-meta">📅 ${sStart ? fmtDate(sStart) : '?'} → ${sEnd ? fmtDate(sEnd) : '?'}</div>`
+      : '';
 
     return `
       <div class="argo-card">
@@ -422,6 +672,7 @@ function renderArgoPanel(data) {
         </div>` : '<div class="argo-meta">No uptime value</div>'}
         ${s.days_monitored ? `<div class="argo-meta">${s.days_monitored} days monitored</div>` : ''}
         ${period ? `<div class="argo-meta">Period: ${period}</div>` : ''}
+        ${sDateRange}
       </div>`;
   }).join('');
 
@@ -429,7 +680,10 @@ function renderArgoPanel(data) {
     <div class="panel">
       <div class="panel-header">
         <div class="panel-header-left"><span class="panel-icon">📡</span> ARGO Uptime Report</div>
-        ${headerBadge}
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+          ${dateRange}
+          ${headerBadge}
+        </div>
       </div>
       <div class="panel-body"><div class="argo-grid">${cards}</div></div>
     </div>`;
@@ -438,24 +692,23 @@ function renderArgoPanel(data) {
 // ── Header meta block ─────────────────────────────────────────────────────────
 
 function buildMeta(ep, cat, argo, nodeName) {
-  // Pull the richest identity info we can from whichever files are present
-  const source = ep || cat || argo || {};
-  const name      = source.node_name     || nodeName;
-  const provider  = source.legal_entity?.name || source.provider || null;
-  const endpoint  = source.node_endpoint || source.endpoint      || null;
-  const pid       = source.node_pid      || source.pid           || null;
+  const source   = ep || cat || argo || {};
+  const name     = source.node_name || nodeName;
+  const provider = source.legal_entity?.name || source.provider || null;
+  const endpoint = source.node_endpoint || source.endpoint || null;
+  const pid      = source.node_pid || source.pid || null;
 
   document.getElementById('display-node-name').textContent = name;
+  document.title = `${name} — EOSC Beyond Node Dashboard`;
 
   const lines = [];
   if (provider) lines.push(`<div><strong>Provider:</strong> ${provider}</div>`);
   if (endpoint) lines.push(`<div><strong>Endpoint:</strong> <a href="${endpoint}" target="_blank" rel="noreferrer">${endpoint}</a></div>`);
   if (pid)      lines.push(`<div><strong>PID:</strong> ${pid}</div>`);
-
   document.getElementById('node-meta-info').innerHTML = lines.join('');
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+// ── Main init ─────────────────────────────────────────────────────────────────
 
 async function init() {
   const main     = document.getElementById('main-content');
@@ -471,14 +724,12 @@ async function init() {
 
   const base = `/api/data/${encodeURIComponent(nodeName)}`;
 
-  // Fetch all three reports simultaneously — each can independently be null
   const [ep, cat, argo] = await Promise.all([
     tryFetchJSON(`${base}/endpoint_report.json`),
     tryFetchJSON(`${base}/catalogue_services_report.json`),
     tryFetchJSON(`${base}/argo_uptime_report.json`),
   ]);
 
-  // If all three are null the node path itself is probably wrong
   if (!ep && !cat && !argo) {
     main.innerHTML = `
       <div class="state-msg">
@@ -496,11 +747,195 @@ async function init() {
     ${renderCataloguePanel(cat)}
     ${renderArgoPanel(argo)}
   `;
+
+  // Highlight current node in the switcher now that we know which one is active
+  refreshSwitcher();
 }
 
-// Re-run if the hash changes (navigating between nodes without page reload)
+// ── Node switcher ─────────────────────────────────────────────────────────────
+
+async function loadSwitcher() {
+  const data = await tryFetchJSON('/api/data/node_registry_summary.json');
+  if (!data || !Array.isArray(data.nodes)) {
+    document.getElementById('ns-list').textContent = 'Could not load nodes';
+    return;
+  }
+  window._allNodes = data.nodes;
+  refreshSwitcher();
+}
+
+function refreshSwitcher() {
+  if (!window._allNodes) return;
+  const current = decodeURIComponent(window.location.hash.substring(1));
+  document.getElementById('ns-list').innerHTML = window._allNodes.map(n => {
+    const name  = n.node_name || n.name || '';
+    const isCur = name === current;
+    return `<a class="ns-item${isCur ? ' current' : ''}" role="menuitem"
+               href="node.html#${encodeURIComponent(name)}"
+               onclick="document.getElementById('node-switcher').setAttribute('aria-expanded','false')">
+              <span class="ns-dot green"></span>
+              ${name}
+              <span class="ns-check">✓</span>
+            </a>`;
+  }).join('');
+}
+
+function toggleSwitcher() {
+  const sw = document.getElementById('node-switcher');
+  sw.setAttribute('aria-expanded', sw.getAttribute('aria-expanded') !== 'true');
+}
+
+// Close on outside click or Escape
+document.addEventListener('click', e => {
+  const sw = document.getElementById('node-switcher');
+  if (sw && !sw.contains(e.target)) sw.setAttribute('aria-expanded', 'false');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('node-switcher')?.setAttribute('aria-expanded', 'false');
+});
+
+// ── Run-checks menu ───────────────────────────────────────────────────────────
+
+const NODE_CHECK_LABELS = {
+  'catalogue-services': 'Catalogue Services',
+  'service-uptime':     'Service Uptime',
+};
+
+function toggleRunMenu() {
+  const menu = document.getElementById('run-menu');
+  const isOpen = menu.getAttribute('aria-expanded') === 'true';
+  menu.setAttribute('aria-expanded', !isOpen);
+  // Close node switcher if open
+  if (!isOpen) document.getElementById('node-switcher').setAttribute('aria-expanded', 'false');
+}
+
+document.addEventListener('click', e => {
+  const menu = document.getElementById('run-menu');
+  if (menu && !menu.contains(e.target)) menu.setAttribute('aria-expanded', 'false');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('run-menu')?.setAttribute('aria-expanded', 'false');
+    closeApiKeyModal();
+  }
+});
+
+// ── API key modal ─────────────────────────────────────────────────────────────
+
+let _pendingCheckType = null;
+
+function promptAndRun(type) {
+  _pendingCheckType = type;
+  document.getElementById('run-menu').setAttribute('aria-expanded', 'false');
+
+  const label = NODE_CHECK_LABELS[type] || type;
+  const nodeName = decodeURIComponent(window.location.hash.substring(1)) || 'this node';
+  document.getElementById('apikey-check-label').textContent = label;
+  document.getElementById('apikey-node-label').textContent  = nodeName;
+
+  // Always start blank — never pre-fill
+  const input = document.getElementById('apikey-input');
+  input.value = '';
+
+  document.getElementById('apikey-overlay').classList.add('open');
+  setTimeout(() => input.focus(), 50);
+}
+
+function closeApiKeyModal() {
+  document.getElementById('apikey-overlay').classList.remove('open');
+  document.getElementById('apikey-input').value = '';
+  _pendingCheckType = null;
+}
+
+// Close on backdrop click
+document.getElementById('apikey-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('apikey-overlay')) closeApiKeyModal();
+});
+
+// Allow Enter to confirm
+document.getElementById('apikey-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmApiKey();
+});
+
+function confirmApiKey() {
+  const apiKey = document.getElementById('apikey-input').value.trim();
+  if (!apiKey) {
+    document.getElementById('apikey-input').focus();
+    return;
+  }
+  const type = _pendingCheckType;
+  closeApiKeyModal(); // clears input and _pendingCheckType
+  runNodeCheck(type, apiKey);
+}
+
+async function runNodeCheck(type, apiKey) {
+  const btn = document.getElementById('btn-' + type);
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+
+  const label    = NODE_CHECK_LABELS[type] || type;
+  const nodeName = decodeURIComponent(window.location.hash.substring(1));
+  showToast('info', label, `Starting for ${nodeName}…`);
+
+  let jobId;
+  try {
+    const res  = await fetch(`/api/run/${type}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ node: nodeName, apiKey }),
+    });
+    // apiKey reference ends here — it is not stored anywhere
+    const data = await res.json();
+    if (!res.ok) { showToast('err', label, data.error || 'HTTP ' + res.status); resetBtn(btn); return; }
+    jobId = data.jobId;
+  } catch (e) {
+    showToast('err', label, 'Request failed: ' + e.message);
+    resetBtn(btn); return;
+  }
+
+  showToast('info', label, 'Running… (job ' + jobId + ')');
+  const result = await pollJobStatus(jobId);
+
+  if (result.status === 'DONE') { showToast('ok', label, result.message || 'Completed'); init(); }
+  else                          { showToast('err', label, result.message || 'Check failed'); }
+
+  resetBtn(btn);
+}
+
+async function pollJobStatus(jobId, intervalMs = 1500, maxWaitMs = 300_000) {
+  const deadline = Date.now() + maxWaitMs;
+  while (Date.now() < deadline) {
+    await new Promise(r => setTimeout(r, intervalMs));
+    try {
+      const r = await fetch(`/api/run/${encodeURIComponent(jobId)}/status`);
+      if (!r.ok) continue;
+      const d = await r.json();
+      if (d.status === 'DONE' || d.status === 'ERROR') return d;
+    } catch { /* retry */ }
+  }
+  return { status: 'ERROR', message: 'Timed out waiting for job ' + jobId };
+}
+
+function resetBtn(btn) { if (btn) { btn.disabled = false; btn.textContent = 'Run'; } }
+
+function showToast(kind, title, message, durationMs = 6000) {
+  const icons = { ok: '✓', err: '✕', info: '↻' };
+  const el = document.createElement('div');
+  el.className = `toast toast-${kind}`;
+  el.innerHTML = `
+    <span class="toast-icon">${icons[kind] || '·'}</span>
+    <div class="toast-body">
+      <div class="toast-title">${title}</div>
+      <div class="toast-msg">${message}</div>
+    </div>`;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => { el.style.transition = 'opacity 0.3s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 320); }, durationMs);
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
+
 window.addEventListener('hashchange', init);
 init();
+loadSwitcher();
 </script>
 </body>
 </html>

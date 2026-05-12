@@ -271,28 +271,6 @@
         </div>
         <button class="run-btn" id="btn-node-capabilities" onclick="runCheck('node-capabilities')">Run</button>
       </div>
-      <div class="run-item" role="menuitem">
-        <div class="run-item-info">
-          <div class="run-item-label">Catalogue Services</div>
-          <div class="run-item-desc">CheckCatalogueServices · catalogue_services_report.json</div>
-        </div>
-        <button class="run-btn" id="btn-catalogue-services" onclick="runCheck('catalogue-services')">Run</button>
-      </div>
-      <div class="run-item" role="menuitem">
-        <div class="run-item-info">
-          <div class="run-item-label">Service Uptime</div>
-          <div class="run-item-desc">CheckServiceUptime · argo_uptime_report.json</div>
-        </div>
-        <button class="run-btn" id="btn-service-uptime" onclick="runCheck('service-uptime')">Run</button>
-      </div>
-      <div class="run-item" role="menuitem" style="background:var(--grey-100)">
-        <div class="run-item-info">
-          <div class="run-item-label" style="color:var(--orange)">Run all checks</div>
-          <div class="run-item-desc">Triggers all three checks in sequence</div>
-        </div>
-        <button class="run-btn" id="btn-run-all"
-                onclick="runCheck('node-capabilities');runCheck('catalogue-services');runCheck('service-uptime');">Run all</button>
-      </div>
     </div>
   </div>
 </nav>
@@ -607,9 +585,7 @@ init();
 // ── Run-checks menu ───────────────────────────────────────────────────────────
 
 const CHECK_LABELS = {
-  'node-capabilities':  'Node Capabilities',
-  'catalogue-services': 'Catalogue Services',
-  'service-uptime':     'Service Uptime',
+  'node-capabilities': 'Node Capabilities',
 };
 
 function toggleRunMenu() {
@@ -626,10 +602,8 @@ document.addEventListener('keydown', e => {
 });
 
 async function runCheck(type) {
-  const btn    = document.getElementById('btn-' + type);
-  const allBtn = document.getElementById('btn-run-all');
+  const btn = document.getElementById('btn-' + type);
   if (btn) { btn.disabled = true; btn.textContent = '…'; }
-  if (allBtn) allBtn.disabled = true;
 
   const label = CHECK_LABELS[type] || type;
   showToast('info', label, 'Starting…');
@@ -638,11 +612,11 @@ async function runCheck(type) {
   try {
     const res  = await fetch(`/api/run/${type}`, { method: 'POST' });
     const data = await res.json();
-    if (!res.ok) { showToast('err', label, data.error || 'HTTP ' + res.status); resetBtn(btn); if (allBtn) allBtn.disabled = false; return; }
+    if (!res.ok) { showToast('err', label, data.error || 'HTTP ' + res.status); resetBtn(btn); return; }
     jobId = data.jobId;
   } catch (e) {
     showToast('err', label, 'Request failed: ' + e.message);
-    resetBtn(btn); if (allBtn) allBtn.disabled = false; return;
+    resetBtn(btn); return;
   }
 
   showToast('info', label, 'Running… (job ' + jobId + ')');
@@ -652,7 +626,6 @@ async function runCheck(type) {
   else                          { showToast('err', label, result.message || 'Check failed'); }
 
   resetBtn(btn);
-  if (allBtn) allBtn.disabled = false;
   document.getElementById('run-menu')?.setAttribute('aria-expanded', 'false');
 }
 
