@@ -17,6 +17,11 @@
 
 package eu.cessda.pilotnode;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.URI;
@@ -34,11 +39,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * EOSC Beyond Node Registry Endpoint Capabilities Checker.
@@ -280,13 +280,9 @@ public class CheckNodeCapabilities {
         
         log.info("Checking capabilities...");
 
+        try (BufferedWriter reportTxtPathWriter = (format.includesText() ? Files.newBufferedWriter(reportTxtPath) : null)) {
 
-        BufferedWriter reportTxtPathWriter = null;
-
-        try {
-
-             if (format.includesText()) {
-                 reportTxtPathWriter = Files.newBufferedWriter(reportTxtPath);
+            if (reportTxtPathWriter != null) {
                  var header = buildNodeTextHeader(nodeName, nodeId, nodePid,
                          nodeEndpoint, nodeLogo, legalEntityName, legalEntityRor);
                  reportTxtPathWriter.write(header);
@@ -357,10 +353,6 @@ public class CheckNodeCapabilities {
 
 
              return nodeReport;
-        } finally {
-            if (reportTxtPathWriter != null) {
-                reportTxtPathWriter.close();
-            }
         }
     }
 

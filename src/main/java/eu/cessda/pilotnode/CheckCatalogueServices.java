@@ -17,8 +17,14 @@
 
 package eu.cessda.pilotnode;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -29,11 +35,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Service Catalogue Resource Checker
@@ -86,7 +87,7 @@ public class CheckCatalogueServices {
 
         // Validate that nodeName contains no directory elements
         var nodeNamePath = Path.of(nodeName);
-        if (nodeNamePath.equals(nodeNamePath.getFileName())) {
+        if (nodeNamePath.normalize().getNameCount() == 1 && !nodeNamePath.isAbsolute()) {
             run(Path.of(dashboardDir), nodeName, apiBaseUrl, quantity);
         } else {
             throw new IllegalArgumentException("nodeName must be a file name");
@@ -193,17 +194,24 @@ public class CheckCatalogueServices {
                 httpCode = null;
                 colour   = YELLOW;
             } else {
-                httpCode = checkWebpage(httpClient, webpage);
+                try {
+                    var url = new URI(webpage);
+                    httpCode = checkWebpage(httpClient, url);
 
-                if (httpCode == 404) {
-                    status = "Not found";
+                    if (httpCode == 404) {
+                        status = "Not found";
+                        colour = YELLOW;
+                    } else if (httpCode >= 200 && httpCode < 400) {
+                        status = "Available";
+                        colour = GREEN;
+                    } else {
+                        status = "Not available";
+                        colour = RED;
+                    }
+                } catch (URISyntaxException e) {
+                    status = "Webpage has a invalid URL: " + e.getMessage();
+                    httpCode = null;
                     colour = YELLOW;
-                } else if (httpCode >= 200 && httpCode < 400) {
-                    status = "Available";
-                    colour = GREEN;
-                } else {
-                    status = "Not available";
-                    colour = RED;
                 }
             }
 
@@ -233,7 +241,7 @@ public class CheckCatalogueServices {
         serviceResults.forEach(servicesArray::add);
         report.set("services", servicesArray);
 
-        Files.writeString(reportFileJson, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(report));
+        mapper.writerWithDefaultPrettyPrinter().writeValue(reportFileJson.toFile(), report);
 
         // ── Footer ────────────────────────────────────────────────────────────
 
@@ -247,9 +255,9 @@ public class CheckCatalogueServices {
      * Issues an HTTP HEAD request to the given URL and returns the HTTP status
      * code as a string, or "000" if the request could not be completed.
      */
-    private static int checkWebpage(HttpClient client, String url) throws IOException, InterruptedException {
+    private static int checkWebpage(HttpClient client, URI url) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(url)
                 .method("HEAD", HttpRequest.BodyPublishers.noBody())
                 .timeout(Duration.ofSeconds(10))
                 .build();

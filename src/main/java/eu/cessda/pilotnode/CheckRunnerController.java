@@ -17,6 +17,13 @@
 
 package eu.cessda.pilotnode;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,14 +33,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * REST controller that triggers the three data-collection checks
@@ -200,12 +199,12 @@ public class CheckRunnerController {
 
         String targetNode   = body.getOrDefault("node", nodeName).strip();
         // User-supplied key takes precedence; config value is the fallback
-        String argoAPIKey = body.getOrDefault("apiKey", argoApiKey).strip();
+        String targetArgoApiKey = body.getOrDefault("apiKey", argoApiKey).strip();
 
         if (targetNode.isBlank()) {
             throw new IllegalArgumentException("No node specified in request body and check.node-name is not configured");
         }
-        if (argoAPIKey.isBlank()) {
+        if (targetArgoApiKey.isBlank()) {
             throw new IllegalArgumentException("No ARGO API key provided in request body and check.api-key-argo is not configured");
         }
 
@@ -219,14 +218,13 @@ public class CheckRunnerController {
             try {
                 LocalDate start = LocalDate.now().minusDays(30);
                 LocalDate end = LocalDate.now();
-                CheckServiceUptime checker = new CheckServiceUptime(targetNode, argoAPIKey, start, end, dataDirPath);
+                CheckServiceUptime checker = new CheckServiceUptime(targetNode, targetArgoApiKey, start, end, dataDirPath);
                 checker.run();
                 rec.markDone("argo_uptime_report.json written for " + targetNode);
             } catch (Exception e) {
                 log.warning("CheckServiceUptime failed: " + e.getMessage());
                 rec.markError(e.getMessage());
             }
-            // finalKey goes out of scope here — not stored anywhere
         });
 
         return rec;

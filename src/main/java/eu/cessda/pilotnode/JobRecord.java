@@ -87,7 +87,10 @@ public final class JobRecord implements Comparable<JobRecord> {
 
     @Override
     public int compareTo(JobRecord o) {
-        return Comparator.comparing(JobRecord::getStartedAt).compare(this, o);
+        return Comparator.comparing(
+                JobRecord::getStartedAt,
+                Comparator.nullsFirst(Comparator.naturalOrder())
+        ).compare(this, o);
     }
 
     public enum Status { QUEUED, RUNNING, DONE, ERROR }
