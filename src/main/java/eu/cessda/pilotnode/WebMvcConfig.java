@@ -17,9 +17,11 @@
 
 package eu.cessda.pilotnode;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -34,6 +36,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    private final String dataDir;
+
+    public WebMvcConfig(@Value("${dashboard.data-dir}") String dataDirPath) {
+        this.dataDir = dataDirPath;
+    }
+
     /**
      * Explicitly registers the classpath static resource handler at the same
      * locations Spring Boot uses by default, but with a defined order that
@@ -41,18 +49,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/")
-                .resourceChain(true);
-    }
-
-    /**
-     * Maps the root path {@code /} to {@code index.html} so that both
-     * {@code http://localhost:8080/} and {@code http://localhost:8080/index.html}
-     * serve the landing page.
-     */
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController("/", "/index.html");
+        // /api/data paths
+        registry.addResourceHandler("/api/data/**")
+                .addResourceLocations(new PathResource(dataDir), new ClassPathResource("dashboard/data/"));
     }
 }

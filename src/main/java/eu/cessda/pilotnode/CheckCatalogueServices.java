@@ -17,8 +17,14 @@
 
 package eu.cessda.pilotnode;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -29,11 +35,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Service Catalogue Resource Checker
@@ -70,7 +71,7 @@ public class CheckCatalogueServices {
         // ── Argument parsing ──────────────────────────────────────────────────
         if (args.length < 1) {
             log.warning("Error: NODE_NAME is required");
-            log.warning("Usage: java CheckCatalogueServices NODE_NAME [api_base_url] [quantity] [dashboard_dir]");
+            log.warning("Usage: java CheckCatalogueServices <NODE_NAME> [<api_base_url>] [<quantity>] [<dashboard_dir>]");
             throw new RuntimeException("Failed to fetch Catalogue Services data");
         }
 
@@ -84,8 +85,20 @@ public class CheckCatalogueServices {
         int    quantity     = args.length >= 3 ? Integer.parseInt(args[2]) : 10;
         String dashboardDir = args.length >= 4 ? args[3] : "../dashboard/data";
 
+        // Validate that nodeName contains no directory elements
+        var nodeNamePath = Path.of(nodeName);
+        if (nodeNamePath.normalize().getNameCount() == 1 && !nodeNamePath.isAbsolute()) {
+            run(Path.of(dashboardDir), nodeName, apiBaseUrl, quantity);
+        } else {
+            throw new IllegalArgumentException("nodeName must be a file name");
+        }
+    }
+
+    public static void run(Path dashboardDir, String nodeName, String apiBaseUrl, int quantity) throws IOException, InterruptedException {
+
+
         // ── Output paths ──────────────────────────────────────────────────────
-        Path outputDir      = Path.of(dashboardDir, nodeName);
+        Path outputDir      = dashboardDir.resolve(nodeName);
         Files.createDirectories(outputDir);
         Path reportFileJson = outputDir.resolve("catalogue_services_report.json");
 
@@ -133,11 +146,11 @@ public class CheckCatalogueServices {
         }
 
         log.info("Data retrieved successfully! (HTTP " + apiResponse.statusCode() + ")");
-        
+
         log.info("=== JSON RESPONSE (first 500 characters) ===");
         log.info(jsonData.substring(0, Math.min(500, jsonData.length())));
         log.info("============================================");
-        
+
 
         // ── Parse JSON ────────────────────────────────────────────────────────
         ObjectMapper mapper = new ObjectMapper();
@@ -155,11 +168,11 @@ public class CheckCatalogueServices {
 
         long total = root.path("total").asLong(0);
         log.info("Total services found: " + total);
-        
+
 
         // ── Check each service webpage ────────────────────────────────────────
         log.info("Checking service webpages...");
-        
+
 
         JsonNode results = root.path("results");
         List<ObjectNode> serviceResults = new ArrayList<>();
@@ -173,7 +186,7 @@ public class CheckCatalogueServices {
                                       ? null : service.path("abbreviation").asText();
 
             String status;
-            String httpCode;
+            Integer httpCode;
             String colour;
 
             if (webpage == null || webpage.isEmpty()) {
@@ -181,23 +194,24 @@ public class CheckCatalogueServices {
                 httpCode = null;
                 colour   = YELLOW;
             } else {
-                httpCode = checkWebpage(httpClient, webpage);
+                try {
+                    var url = new URI(webpage);
+                    httpCode = checkWebpage(httpClient, url);
 
-                int code;
-                try { code = Integer.parseInt(httpCode); } catch (NumberFormatException e) { code = 0; }
-
-                if (code == 0) {
-                    status = "Not available";
-                    colour = RED;
-                } else if (code == 404) {
-                    status = "Not found";
+                    if (httpCode == 404) {
+                        status = "Not found";
+                        colour = YELLOW;
+                    } else if (httpCode >= 200 && httpCode < 400) {
+                        status = "Available";
+                        colour = GREEN;
+                    } else {
+                        status = "Not available";
+                        colour = RED;
+                    }
+                } catch (URISyntaxException e) {
+                    status = "Webpage has a invalid URL: " + e.getMessage();
+                    httpCode = null;
                     colour = YELLOW;
-                } else if (code >= 200 && code < 400) {
-                    status = "Available";
-                    colour = GREEN;
-                } else {
-                    status = "Not available";
-                    colour = RED;
                 }
             }
 
@@ -219,7 +233,7 @@ public class CheckCatalogueServices {
         // ── Write JSON report ─────────────────────────────────────────────────
         ObjectNode report = mapper.createObjectNode();
         report.put("generated",      Instant.now().toString());
-        report.put("node_name",      nodeName);
+        report.put("node_name", nodeName);
         report.put("api_source",     apiUrl);
         report.put("total_services", total);
 
@@ -227,10 +241,10 @@ public class CheckCatalogueServices {
         serviceResults.forEach(servicesArray::add);
         report.set("services", servicesArray);
 
-        Files.writeString(reportFileJson, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(report));
+        mapper.writerWithDefaultPrettyPrinter().writeValue(reportFileJson.toFile(), report);
 
         // ── Footer ────────────────────────────────────────────────────────────
-        
+
         separator();
         log.info("Report generated:");
         log.info("  JSON: " + reportFileJson.toAbsolutePath());
@@ -241,20 +255,15 @@ public class CheckCatalogueServices {
      * Issues an HTTP HEAD request to the given URL and returns the HTTP status
      * code as a string, or "000" if the request could not be completed.
      */
-    private static String checkWebpage(HttpClient client, String url) {
-        try {
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .method("HEAD", HttpRequest.BodyPublishers.noBody())
-                    .timeout(Duration.ofSeconds(10))
-                    .build();
+    private static int checkWebpage(HttpClient client, URI url) throws IOException, InterruptedException {
+        HttpRequest req = HttpRequest.newBuilder()
+                .uri(url)
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .timeout(Duration.ofSeconds(10))
+                .build();
 
-            HttpResponse<Void> resp = client.send(req, HttpResponse.BodyHandlers.discarding());
-            return String.valueOf(resp.statusCode());
-
-        } catch (Exception e) {
-            return "000";
-        }
+        HttpResponse<Void> resp = client.send(req, HttpResponse.BodyHandlers.discarding());
+        return resp.statusCode();
     }
 
     private static void separator() {
