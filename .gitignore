@@ -61,3 +61,6 @@ nbdist/
 .nb-gradle/
 .vscode/
 bin/
+
+### Data files ###
+dashboard/

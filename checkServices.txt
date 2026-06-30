@@ -1,0 +1,220 @@
+Service Catalogue checks
+
+
+2026-05-15T13:56:00.460+02:00  INFO 4698 --- [           main] e.c.p.PilotNodeDashboardApplication      : Starting PilotNodeDashboardApplication using Java 21.0.10 with PID 4698 (/Users/johnshepherdson/GitHub/cessda-pilot-node-tests/target/classes started by johnshepherdson in /Users/johnshepherdson/GitHub/cessda-pilot-node-tests)
+2026-05-15T13:56:00.462+02:00  INFO 4698 --- [           main] e.c.p.PilotNodeDashboardApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-15T13:56:00.971+02:00  INFO 4698 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-15T13:56:00.978+02:00  INFO 4698 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-15T13:56:00.979+02:00  INFO 4698 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-15T13:56:01.002+02:00  INFO 4698 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-15T13:56:01.003+02:00  INFO 4698 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 520 ms
+2026-05-15T13:56:01.082+02:00  INFO 4698 --- [           main] e.c.pilotnode.DashboardDataController    : Dashboard data directory:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data
+2026-05-15T13:56:01.102+02:00  INFO 4698 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-05-15T13:56:01.260+02:00  INFO 4698 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-05-15T13:56:01.298+02:00  INFO 4698 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-15T13:56:01.309+02:00  INFO 4698 --- [           main] e.c.p.PilotNodeDashboardApplication      : Started PilotNodeDashboardApplication in 1.062 seconds (process running for 1.222)
+2026-05-15T13:56:20.860+02:00  INFO 4698 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-15T13:56:20.861+02:00  INFO 4698 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-15T13:56:20.862+02:00  INFO 4698 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-05-15T13:56:20.953+02:00  INFO 4698 --- [nio-8080-exec-5] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/argo_uptime_report.json
+2026-05-15T13:56:20.953+02:00  INFO 4698 --- [nio-8080-exec-2] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/catalogue_services_report.json
+2026-05-15T13:56:20.953+02:00  INFO 4698 --- [nio-8080-exec-3] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/endpoint_report.json
+2026-05-15T13:56:20.953+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/node_registry_summary.json
+2026-05-15T13:56:24.442+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/endpoint_report.json
+2026-05-15T13:56:24.487+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:24.487+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Service Catalogue Resource Availability Report
+2026-05-15T13:56:24.487+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:24.488+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Generated : 2026-05-15T11:56:24.487820Z
+2026-05-15T13:56:24.488+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Node Name : CESSDA
+2026-05-15T13:56:24.488+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : API Source: https://service-catalogue-staging.beyond.cessda.eu/api/service/all?keyword=CESSDA&from=0&quantity=10&order=asc
+2026-05-15T13:56:24.488+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:24.488+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Fetching service data from API...
+2026-05-15T13:56:25.374+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Data retrieved successfully! (HTTP 200)
+2026-05-15T13:56:25.375+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : === JSON RESPONSE (first 500 characters) ===
+2026-05-15T13:56:25.375+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : {"total":6,"from":0,"to":6,"results":[{"id":"service/S1Ux8C","abbreviation":"CDC","name":"CESSDA Data Catalogue","node":"node-cessda","resourceOrganisation":"provider/ZE281w","resourceProviders":["provider/ZE281w"],"webpage":"https://www.cessda.eu/Tools/Data-Catalogue","alternativeIdentifiers":null,"description":"<p>The CESSDA Data Catalogue contains the metadata of all data in the holdings of CESSDA service providers. It is a one-stop-shop for search and discovery, enabling effective access to 
+2026-05-15T13:56:25.375+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ============================================
+2026-05-15T13:56:25.387+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Total services found: 6
+2026-05-15T13:56:25.387+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Checking service webpages...
+CESSDA Data Catalogue                              Available
+CESSDA Vocabulary Service                          Available
+CESSDA Metadata Validator                          Available
+CESSDA European Language Social Science Thesaurus  Available
+CESSDA Data Management Expert Guide                Available
+CESSDA Data Archiving Guide                        Available
+2026-05-15T13:56:26.448+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:26.449+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Report generated:
+2026-05-15T13:56:26.449+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     :   JSON: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/catalogue_services_report.json
+2026-05-15T13:56:26.449+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:27.529+02:00  INFO 4698 --- [nio-8080-exec-1] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/catalogue_services_report.json
+2026-05-15T13:56:27.530+02:00  INFO 4698 --- [io-8080-exec-10] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/argo_uptime_report.json
+2026-05-15T13:56:27.529+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/CESSDA/endpoint_report.json
+2026-05-15T13:56:38.334+02:00  INFO 4698 --- [nio-8080-exec-3] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/catalogue_services_report.json
+2026-05-15T13:56:38.334+02:00  INFO 4698 --- [nio-8080-exec-5] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/endpoint_report.json
+2026-05-15T13:56:38.335+02:00  INFO 4698 --- [nio-8080-exec-2] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/argo_uptime_report.json
+2026-05-15T13:56:40.841+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/endpoint_report.json
+2026-05-15T13:56:40.853+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:40.853+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Service Catalogue Resource Availability Report
+2026-05-15T13:56:40.853+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:40.854+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Generated : 2026-05-15T11:56:40.853938Z
+2026-05-15T13:56:40.854+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Node Name : ENES
+2026-05-15T13:56:40.854+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : API Source: https://enes-resource-catalogue.pilot.eosc-beyond.eu/api/service/all?keyword=ENES&from=0&quantity=10&order=asc
+2026-05-15T13:56:40.854+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:40.854+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Fetching service data from API...
+2026-05-15T13:56:41.918+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Data retrieved successfully! (HTTP 200)
+2026-05-15T13:56:41.919+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : === JSON RESPONSE (first 500 characters) ===
+2026-05-15T13:56:41.919+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : {"total":0,"from":0,"to":0,"results":[],"facets":[]}
+2026-05-15T13:56:41.919+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ============================================
+2026-05-15T13:56:41.920+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Total services found: 0
+2026-05-15T13:56:41.920+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Checking service webpages...
+2026-05-15T13:56:41.921+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:41.921+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Report generated:
+2026-05-15T13:56:41.921+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     :   JSON: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/catalogue_services_report.json
+2026-05-15T13:56:41.921+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:56:42.376+02:00  INFO 4698 --- [io-8080-exec-10] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/catalogue_services_report.json
+2026-05-15T13:56:42.376+02:00  INFO 4698 --- [nio-8080-exec-9] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/endpoint_report.json
+2026-05-15T13:56:42.376+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/ENES/argo_uptime_report.json
+2026-05-15T13:58:02.031+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/endpoint_report.json
+2026-05-15T13:58:02.034+02:00  INFO 4698 --- [nio-8080-exec-8] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/argo_uptime_report.json
+2026-05-15T13:58:02.034+02:00  INFO 4698 --- [nio-8080-exec-7] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/catalogue_services_report.json
+2026-05-15T13:58:04.320+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/endpoint_report.json
+2026-05-15T13:58:04.330+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:04.330+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Service Catalogue Resource Availability Report
+2026-05-15T13:58:04.331+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:04.334+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Generated : 2026-05-15T11:58:04.334623Z
+2026-05-15T13:58:04.334+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Node Name : NFDI
+2026-05-15T13:58:04.336+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : API Source: https://public-data.desy.de/api/service/all?keyword=NFDI&from=0&quantity=10&order=asc
+2026-05-15T13:58:04.336+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:04.336+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Fetching service data from API...
+2026-05-15T13:58:04.747+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Data retrieved successfully! (HTTP 404)
+2026-05-15T13:58:04.748+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : === JSON RESPONSE (first 500 characters) ===
+2026-05-15T13:58:04.748+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : {"message":"Cannot GET /api/service/all?keyword=NFDI&from=0&quantity=10&order=asc","error":"Not Found","statusCode":404}
+2026-05-15T13:58:04.748+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ============================================
+2026-05-15T13:58:04.749+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : WARNING: API response contains an 'error' field.
+2026-05-15T13:58:04.750+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Total services found: 0
+2026-05-15T13:58:04.750+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Checking service webpages...
+2026-05-15T13:58:04.753+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:04.753+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Report generated:
+2026-05-15T13:58:04.753+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     :   JSON: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/catalogue_services_report.json
+2026-05-15T13:58:04.753+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:05.851+02:00  INFO 4698 --- [nio-8080-exec-3] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/argo_uptime_report.json
+2026-05-15T13:58:05.851+02:00  INFO 4698 --- [nio-8080-exec-1] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/catalogue_services_report.json
+2026-05-15T13:58:05.851+02:00  INFO 4698 --- [nio-8080-exec-2] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NFDI/endpoint_report.json
+2026-05-15T13:58:15.039+02:00  INFO 4698 --- [nio-8080-exec-5] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/METROFOOD/endpoint_report.json
+2026-05-15T13:58:15.039+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/METROFOOD/catalogue_services_report.json
+2026-05-15T13:58:15.039+02:00  INFO 4698 --- [nio-8080-exec-8] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/METROFOOD/argo_uptime_report.json
+2026-05-15T13:58:19.466+02:00  INFO 4698 --- [nio-8080-exec-7] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/METROFOOD/endpoint_report.json
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Service Catalogue Resource Availability Report
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Generated : 2026-05-15T11:58:19.482686Z
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Node Name : METROFOOD
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : API Source: https://catalogues.eosc.metrofood-services.eu/api/service/all?keyword=METROFOOD&from=0&quantity=10&order=asc
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:19.482+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Fetching service data from API...
+2026-05-15T13:58:20.052+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Data retrieved successfully! (HTTP 200)
+2026-05-15T13:58:20.053+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : === JSON RESPONSE (first 500 characters) ===
+2026-05-15T13:58:20.053+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : <!doctype html>
+<html lang="en" data-critters-container>
+  <head><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta charset="utf-8">
+    <title>Metrofood Catalogues</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/assets/favicon/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+    <link href="/assets/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/a
+2026-05-15T13:58:20.053+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ============================================
+2026-05-15T13:58:20.056+02:00  WARN 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ERROR: Response is not valid JSON: Unexpected character ('<' (code 60)): expected a valid value (JSON String, Number, Array, Object or token 'null', 'true' or 'false')
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 1]
+2026-05-15T13:58:20.056+02:00  WARN 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckRunnerController      : CheckCatalogueServices failed: Failed to fetch Catalogue Services data
+2026-05-15T13:58:31.370+02:00  INFO 4698 --- [io-8080-exec-10] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/Instruct-ERIC/endpoint_report.json
+2026-05-15T13:58:31.371+02:00  INFO 4698 --- [nio-8080-exec-2] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/Instruct-ERIC/catalogue_services_report.json
+2026-05-15T13:58:31.371+02:00  INFO 4698 --- [nio-8080-exec-3] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/Instruct-ERIC/argo_uptime_report.json
+2026-05-15T13:58:34.680+02:00  INFO 4698 --- [nio-8080-exec-1] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/Instruct-ERIC/endpoint_report.json
+2026-05-15T13:58:34.687+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:34.688+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Service Catalogue Resource Availability Report
+2026-05-15T13:58:34.688+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:34.688+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Generated : 2026-05-15T11:58:34.688298Z
+2026-05-15T13:58:34.688+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Node Name : Instruct-ERIC
+2026-05-15T13:58:34.688+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : API Source: https://pilot-node.instruct-eric.org/catalogue/services/api/service/all?keyword=Instruct-ERIC&from=0&quantity=10&order=asc
+2026-05-15T13:58:34.689+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:34.689+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Fetching service data from API...
+2026-05-15T13:58:35.387+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : Data retrieved successfully! (HTTP 404)
+2026-05-15T13:58:35.387+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : === JSON RESPONSE (first 500 characters) ===
+2026-05-15T13:58:35.388+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /catalogue/services/api/service/all</pre>
+</body>
+</html>
+
+2026-05-15T13:58:35.388+02:00  INFO 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ============================================
+2026-05-15T13:58:35.388+02:00  WARN 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckCatalogueServices     : ERROR: Response is not valid JSON: Unexpected character ('<' (code 60)): expected a valid value (JSON String, Number, Array, Object or token 'null', 'true' or 'false')
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 1]
+2026-05-15T13:58:35.388+02:00  WARN 4698 --- [pool-2-thread-2] e.c.pilotnode.CheckRunnerController      : CheckCatalogueServices failed: Failed to fetch Catalogue Services data
+2026-05-15T13:58:40.835+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/endpoint_report.json
+2026-05-15T13:58:40.835+02:00  INFO 4698 --- [nio-8080-exec-7] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/catalogue_services_report.json
+2026-05-15T13:58:40.836+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/argo_uptime_report.json
+2026-05-15T13:58:44.020+02:00  INFO 4698 --- [nio-8080-exec-9] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/endpoint_report.json
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Service Catalogue Resource Availability Report
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Generated : 2026-05-15T11:58:44.026598Z
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Node Name : EOSC-Beyond
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : API Source: https://providers.sandbox.eosc-beyond.eu/api/api/service/all?keyword=EOSC-Beyond&from=0&quantity=10&order=asc
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:44.026+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Fetching service data from API...
+2026-05-15T13:58:44.415+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Data retrieved successfully! (HTTP 500)
+2026-05-15T13:58:44.415+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : === JSON RESPONSE (first 500 characters) ===
+2026-05-15T13:58:44.415+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : {"status":500,"traceId":"e5067b7a445ceea2dfcf14d056ad59ae","timestamp":"2026-05-15T11:58:44.452+00:00","url":"GET: /api/api/service/all?keyword=EOSC-Beyond&from=0&quantity=10&order=asc","message":"Internal Server Error"}
+2026-05-15T13:58:44.416+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ============================================
+2026-05-15T13:58:44.416+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Total services found: 0
+2026-05-15T13:58:44.416+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Checking service webpages...
+2026-05-15T13:58:44.419+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:44.419+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : Report generated:
+2026-05-15T13:58:44.419+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     :   JSON: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/catalogue_services_report.json
+2026-05-15T13:58:44.419+02:00  INFO 4698 --- [pool-2-thread-3] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:45.540+02:00  INFO 4698 --- [nio-8080-exec-3] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/endpoint_report.json
+2026-05-15T13:58:45.540+02:00  INFO 4698 --- [nio-8080-exec-1] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/catalogue_services_report.json
+2026-05-15T13:58:45.540+02:00  INFO 4698 --- [nio-8080-exec-8] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/argo_uptime_report.json
+2026-05-15T13:58:51.214+02:00  INFO 4698 --- [nio-8080-exec-7] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/endpoint_report.json
+2026-05-15T13:58:51.214+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/argo_uptime_report.json
+2026-05-15T13:58:51.216+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/EOSC-Beyond/catalogue_services_report.json
+2026-05-15T13:58:51.220+02:00  INFO 4698 --- [nio-8080-exec-9] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/node_registry_summary.json
+2026-05-15T13:58:56.990+02:00  INFO 4698 --- [nio-8080-exec-2] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/endpoint_report.json
+2026-05-15T13:58:56.993+02:00  INFO 4698 --- [io-8080-exec-10] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/catalogue_services_report.json
+2026-05-15T13:58:56.994+02:00  INFO 4698 --- [nio-8080-exec-8] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/argo_uptime_report.json
+2026-05-15T13:58:59.071+02:00  INFO 4698 --- [nio-8080-exec-1] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/endpoint_report.json
+2026-05-15T13:58:59.078+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:59.078+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Service Catalogue Resource Availability Report
+2026-05-15T13:58:59.078+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:59.078+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Generated : 2026-05-15T11:58:59.078917Z
+2026-05-15T13:58:59.079+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Node Name : NI4OS-EUROPE
+2026-05-15T13:58:59.079+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : API Source: https://cat.ni4os.eu/api/api/service/all?keyword=NI4OS-EUROPE&from=0&quantity=10&order=asc
+2026-05-15T13:58:59.079+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:59.079+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Fetching service data from API...
+2026-05-15T13:58:59.864+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Data retrieved successfully! (HTTP 500)
+2026-05-15T13:58:59.864+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : === JSON RESPONSE (first 500 characters) ===
+2026-05-15T13:58:59.865+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : {"status":500,"transactionId":"440475e7-0e86-4079-a0e0-fbb930d644b5","timestamp":"2026-05-15T11:58:59.881+00:00","url":"GET: /api/api/service/all?keyword=NI4OS-EUROPE&from=0&quantity=10&order=asc","message":"Internal Server Error"}
+2026-05-15T13:58:59.865+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ============================================
+2026-05-15T13:58:59.865+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Total services found: 0
+2026-05-15T13:58:59.865+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Checking service webpages...
+2026-05-15T13:58:59.867+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:58:59.867+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : Report generated:
+2026-05-15T13:58:59.867+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     :   JSON: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/catalogue_services_report.json
+2026-05-15T13:58:59.867+02:00  INFO 4698 --- [pool-2-thread-1] e.c.pilotnode.CheckCatalogueServices     : ======================================
+2026-05-15T13:59:00.594+02:00  INFO 4698 --- [nio-8080-exec-7] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/catalogue_services_report.json
+2026-05-15T13:59:00.595+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/endpoint_report.json
+2026-05-15T13:59:00.594+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/argo_uptime_report.json
+2026-05-15T13:59:03.597+02:00  INFO 4698 --- [io-8080-exec-10] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/endpoint_report.json
+2026-05-15T13:59:03.597+02:00  INFO 4698 --- [nio-8080-exec-8] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/catalogue_services_report.json
+2026-05-15T13:59:03.597+02:00  INFO 4698 --- [nio-8080-exec-2] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/argo_uptime_report.json
+2026-05-15T13:59:03.598+02:00  INFO 4698 --- [nio-8080-exec-1] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/node_registry_summary.json
+2026-05-15T13:59:04.506+02:00  INFO 4698 --- [nio-8080-exec-4] e.c.pilotnode.DashboardDataController    : Data file not found: /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/argo_uptime_report.json
+2026-05-15T13:59:04.507+02:00  INFO 4698 --- [nio-8080-exec-5] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/endpoint_report.json
+2026-05-15T13:59:04.506+02:00  INFO 4698 --- [nio-8080-exec-6] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/node_registry_summary.json
+2026-05-15T13:59:04.507+02:00  INFO 4698 --- [nio-8080-exec-7] e.c.pilotnode.DashboardDataController    : Serving data file:  /Users/johnshepherdson/GitHub/cessda-pilot-node-tests/dashboard/data/NI4OS-EUROPE/catalogue_services_report.json
